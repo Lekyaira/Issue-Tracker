@@ -1,0 +1,11 @@
+<ul class="issue-list">
+    <li *ngFor="let issue of issues">
+        <a class="issue-item-link" routerLink="detail/{{issue.id}}">
+            <div class="issue-list-item">
+                <span class="priority">{{issue.priority}}</span>
+                <span class="title">{{issue.title}}</span>
+                <span class="creator">{{issue.creator}}</span>
+            </div>
+        </a>
+    </li>
+</ul>

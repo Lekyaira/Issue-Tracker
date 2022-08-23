@@ -1,0 +1,28 @@
+#grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-areas:
+        'nav nav'
+        'body sidebar'
+        'foot foot';
+    grid-template-columns: auto 11rem;
+    grid-template-rows: 3rem 60rem 1rem;
+    width: 100%;
+}
+
+#top-bar {
+    grid-area: nav;
+}
+
+#categories-bar {
+    grid-area: sidebar;
+}
+
+#main-view {
+    grid-area: body;
+    padding: 2rem 0 0 0;
+}
+
+#footer {
+    grid-area: foot;
+}

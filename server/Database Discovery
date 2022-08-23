@@ -1,0 +1,3 @@
+The application has issues, each with an issue description. Each issue has a category that contains it. Users can create, edit and delete issues, and project owners can create, edit and delete categories. Issues have a priority, and top priority issues from all categories can be viewed on the dashboard. Owners are users.
+
+Projects contain the issues and categories for a particular project. Users are part of a project, and shouldn't be able to view or edit the issues of a different project, and project owners own a particular project. Any user may create a project, and invite other users as a user or owner of that project. All activity in a project is logged for audit purposes.
