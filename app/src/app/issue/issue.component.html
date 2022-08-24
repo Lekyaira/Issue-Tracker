@@ -1,4 +1,19 @@
 <div *ngIf="issue">
-    <p>Title: {{issue.title}}</p>
-    <p>Creator: {{issue.creator}}</p>
+    <div class="issue-details">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" [(ngModel)]="issue.title">
+    </div>
+    <div class="issue-details">
+        <label for="creator">Creator:</label>
+        <input type="text" id="creator" readonly [(ngModel)]="issue.creator">
+    </div>
+    <div class="issue-details">
+        <label for="priority">Priority:</label>
+        <input type="number" id="priority" min="1" max="10" [(ngModel)]="issue.priority">
+    </div>
+    <angular-editor [(ngModel)]="issue.description" [config]="config"></angular-editor>
+    <div class="control-buttons">
+        <button type="button" (click)="goBack()">Cancel</button>
+        <button type="button" (click)="save()">Save</button>
+    </div>
 </div>

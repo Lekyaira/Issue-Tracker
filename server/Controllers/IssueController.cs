@@ -43,5 +43,23 @@ namespace server.Controllers
         {
             db.CreateIssue(issue);
         }
+
+        // Update an existing issue by id
+        // PUT /api/issue
+        [EnableCors("Development")]
+        [HttpPut]
+        public void updateIssue(Issue issue)
+        {
+            db.UpdateIssue(issue);
+        }
+
+        // Delete an existing issue by id
+        // delete /api/issue/:id
+        [EnableCors("Development")]
+        [HttpDelete("{id}")]
+        public void deleteIssue(int id)
+        {
+            db.DeleteIssue(id);
+        }
     }
 }

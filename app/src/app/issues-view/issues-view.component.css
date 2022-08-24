@@ -39,11 +39,29 @@
     font-weight: lighter;
 }
 
+.title a {
+    display: block;
+}
+
 .creator {
     margin-right: 1rem;
+}
+
+.delete {
+    margin-right: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.delete a {
+    color: red;
 }
 
 a {
     text-decoration: none;
     color: black;
+}
+
+#new-issue {
+    font-size: large;
+    float: right;
 }

@@ -8,5 +8,6 @@ namespace server.Models
         public string? Description { get; set; }
         public int Priority { get; set; }
         public string Creator { get; set; }
+        public uint CreatorId { get; set; }
     }
 }

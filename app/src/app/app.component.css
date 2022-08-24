@@ -6,23 +6,37 @@
         'body sidebar'
         'foot foot';
     grid-template-columns: auto 11rem;
-    grid-template-rows: 3rem 60rem 1rem;
+    grid-template-rows: 6rem auto 1rem;
     width: 100%;
 }
 
 #top-bar {
     grid-area: nav;
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid;
+    padding: 0 1rem 1rem 1rem;
 }
 
 #categories-bar {
     grid-area: sidebar;
+    height: 60rem; /* Probably make this variable height later? */
 }
 
 #main-view {
     grid-area: body;
-    padding: 2rem 0 0 0;
 }
 
 #footer {
     grid-area: foot;
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding: 1rem;
+    border-top: 1px solid;
 }

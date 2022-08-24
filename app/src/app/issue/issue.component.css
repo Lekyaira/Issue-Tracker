@@ -1,0 +1,16 @@
+.control-buttons {
+    float: right;
+}
+
+.control-buttons button {
+    font-size: large;
+}
+
+.issue-details {
+    font-size: large;
+}
+
+.issue-details input {
+    font-size: medium;
+    font-weight: lighter;
+}

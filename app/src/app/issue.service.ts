@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Issue } from './issue';
-import { ISSUES } from './mock-issues';
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +22,18 @@ export class IssueService {
   getIssue(id: number): Observable<Issue> {
     const url = `${this.issuesUrl}/${id}`;
     return this.http.get<Issue>(url);
+  }
+
+  updateIssue(issue: Issue): Observable<any> {
+    return this.http.put(this.issuesUrl, issue);
+  }
+
+  createIssue(issue: Issue): Observable<any> {
+    return this.http.post(this.issuesUrl, issue);
+  }
+
+  deleteIssue(id: number): Observable<any> {
+    const url = `${this.issuesUrl}/${id}`;
+    return this.http.delete(url);
   }
 }

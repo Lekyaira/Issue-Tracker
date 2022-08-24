@@ -1,11 +1,14 @@
+<button type="button" id="new-issue" [routerLink]="['detail']">
+    New Issue
+</button>
 <ul class="issue-list">
     <li *ngFor="let issue of issues">
-        <a class="issue-item-link" routerLink="detail/{{issue.id}}">
-            <div class="issue-list-item">
-                <span class="priority">{{issue.priority}}</span>
-                <span class="title">{{issue.title}}</span>
-                <span class="creator">{{issue.creator}}</span>
-            </div>
-        </a>
+        
+        <div class="issue-list-item">
+            <span class="priority">{{issue.priority}}</span>
+            <span class="title"><a class="issue-item-link" routerLink="detail/{{issue.id}}">{{issue.title}}</a></span>
+            <span class="creator">{{issue.creator}}</span>   
+            <span class="delete"><a (click)="deleteIssue(issue)">x</a></span>             
+        </div>
     </li>
 </ul>

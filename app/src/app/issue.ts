@@ -1,7 +1,8 @@
 export interface Issue {
-    id: number;
+    id?: number;
     title: string;
     priority: number;
     creator: string;
+    creatorId: number;
     description?: string;
 }

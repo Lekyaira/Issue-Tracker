@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +23,8 @@ import { CategoriesBarComponent } from './categories-bar/categories-bar.componen
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    AngularEditorModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -50,7 +50,7 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.description, User.name FROM Issue JOIN User ON Issue.creator=User.id";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.description, Issue.creator, User.name FROM Issue JOIN User ON Issue.creator=User.id";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
 
             using MySqlDataReader reader = command.ExecuteReader();
@@ -65,6 +65,7 @@ namespace server.Models
                     Title = reader.GetString("title"),
                     Priority = reader.GetInt16("priority"),
                     Creator = reader.GetString("name"),
+                    CreatorId = reader.GetUInt16("creator"),
                     Description = reader.GetString("description")
                 };
 
@@ -88,7 +89,7 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.description, User.name from Issue JOIN User ON Issue.creator=User.id WHERE Issue.id = @issueId";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.description, Issue.creator, User.name from Issue JOIN User ON Issue.creator=User.id WHERE Issue.id = @issueId";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
             // Prepare WHERE value
             command.Parameters.AddWithValue("@issueID", id);
@@ -103,6 +104,7 @@ namespace server.Models
                 Title = reader.GetString("title"),
                 Priority = reader.GetInt16("priority"),
                 Creator = reader.GetString("name"),
+                CreatorId = reader.GetUInt16("creator"),
                 Description = reader.GetString("description")
             };
 
@@ -120,28 +122,60 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT id FROM User WHERE name = @userName"; // TODO: Probably want to pass the user id from the POST rather than look it up by name - perhaps tuple (int, Issue)?
-            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
-            // Prepare WHERE value
-            command.Parameters.AddWithValue("@userName", issue.Creator);
-            command.Prepare();
-            // Execute command
-            using MySqlDataReader reader = command.ExecuteReader();
-
-            // Get the user id
-            reader.Read();
-            uint id = reader.GetUInt32("id");
-
-            QUERYSTRING = "INSERT INTO Issue (title, priority, description, creator) VALUES (@issueTitle, @issuePriority, @issueDescription, @issueCreator)"; // Let auto_increment handle the new id
+            string QUERYSTRING = "INSERT INTO Issue (title, priority, description, creator) VALUES (@issueTitle, @issuePriority, @issueDescription, @issueCreator)"; // Let auto_increment handle the new id
             using MySqlCommand insertCommand = new MySqlCommand(QUERYSTRING, conn);
             // Prepare VALUES
             insertCommand.Parameters.AddWithValue("@issueTitle", issue.Title);
             insertCommand.Parameters.AddWithValue("@issuePriority", issue.Priority);
             insertCommand.Parameters.AddWithValue("@issueDescription", issue.Description);
-            insertCommand.Parameters.AddWithValue("@issueCreator", id);
+            insertCommand.Parameters.AddWithValue("@issueCreator", issue.CreatorId);
             insertCommand.Prepare();
             // Execute command
             insertCommand.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Update an existing issue
+        /// </summary>
+        /// <param name="issue">Issue to update. Database id will be pulled from this object.</param>
+        public void UpdateIssue(Issue issue)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "UPDATE Issue SET title=@issueTitle, priority=@issuePriority, description=@issueDescription, creator=@issueCreatorId WHERE id=@issueId";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare values
+            command.Parameters.AddWithValue("@issueTitle", issue.Title);
+            command.Parameters.AddWithValue("@issuePriority", issue.Priority);
+            command.Parameters.AddWithValue("@issueDescription", issue.Description);
+            command.Parameters.AddWithValue("@issueCreatorId", issue.CreatorId);
+            command.Parameters.AddWithValue("@issueId", issue.Id);
+            command.Prepare();
+            // Execute command
+            command.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Deletes an existing issue by id
+        /// </summary>
+        /// <param name="id">Id of issue to delete</param>
+        public void DeleteIssue(int id)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "DELETE FROM Issue WHERE id=@issueId";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare value
+            command.Parameters.AddWithValue("@issueId", id);
+            command.Prepare();
+            // Execute command
+            command.ExecuteNonQuery();
         }
 
         // Returns a formed connection string for MySql database connections
