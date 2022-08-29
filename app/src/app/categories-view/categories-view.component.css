@@ -8,25 +8,25 @@
 }
 
 .categories li {
-    margin: 0.5rem;
+    border-radius: 5px;
+    margin: 0.2rem;
+}
+
+.categories li a {
+    padding: 0.2rem;
     display: flex;
     align-items: center;
 }
 
+.categories li:hover {
+    background-color: #eee;
+}
+
 .category {
-    /*display: block;
-    border: 1px solid;
-    border-radius: 20px;
-    padding: 0.3rem 0.5rem 0.3rem 0.5rem;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
-    font-size: 1rem;
-    width: 10rem;
-    text-align: center;*/
     display: inline-flex;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: lighter;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
 }
 
 .category-badge {
