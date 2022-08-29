@@ -2,5 +2,38 @@
     height: 100%;
     width: 10rem;
     border: 1px solid;
+    border-radius: 5px;
     text-align: center;
+}
+
+.categories-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.category {
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    margin: 0.5rem;
+}
+
+.category-badge {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+}
+
+.category-badge.all-categories {
+    border: 1px solid;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.1rem;
+}
+
+h3 {
+    border-bottom: 1px solid;
+    padding-bottom: 0.5rem;
+    margin: 1rem;
 }

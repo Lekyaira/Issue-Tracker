@@ -9,5 +9,8 @@ namespace server.Models
         public int Priority { get; set; }
         public string Creator { get; set; }
         public uint CreatorId { get; set; }
+        public string? Category { get; set; }
+        public uint CategoryId { get; set; }
+        public string? CategoryColor { get; set; }
     }
 }

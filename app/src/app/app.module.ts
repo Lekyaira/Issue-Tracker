@@ -10,6 +10,8 @@ import { IssuesViewComponent } from './issues-view/issues-view.component';
 import { IssueComponent } from './issue/issue.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { CategoriesBarComponent } from './categories-bar/categories-bar.component';
+import { CategoriesViewComponent } from './categories-view/categories-view.component';
+import { CategoryDetailComponent } from './category-detail/category-detail.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { CategoriesBarComponent } from './categories-bar/categories-bar.componen
     IssuesViewComponent,
     IssueComponent,
     TopBarComponent,
-    CategoriesBarComponent
+    CategoriesBarComponent,
+    CategoriesViewComponent,
+    CategoryDetailComponent
   ],
   imports: [
     BrowserModule,

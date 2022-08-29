@@ -2,15 +2,24 @@
     float: right;
 }
 
-.control-buttons button {
+/*.control-buttons button {
     font-size: large;
-}
+}*/
 
-.issue-details {
+/*.issue-details {
     font-size: large;
-}
+}*/
 
-.issue-details input {
+/*.issue-details input {
     font-size: medium;
     font-weight: lighter;
+}*/
+
+.category-color {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 100%;
+    border: 1px solid;
+    margin-right: 0.5rem;
 }

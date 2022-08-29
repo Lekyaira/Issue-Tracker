@@ -50,7 +50,8 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.description, Issue.creator, User.name FROM Issue JOIN User ON Issue.creator=User.id";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, Category.name AS categoryname, Category.color " +
+                "FROM Issue JOIN User ON Issue.creator=User.id JOIN category ON Issue.category=category.id";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
 
             using MySqlDataReader reader = command.ExecuteReader();
@@ -64,8 +65,11 @@ namespace server.Models
                     Id = reader.GetUInt32("id"),
                     Title = reader.GetString("title"),
                     Priority = reader.GetInt16("priority"),
-                    Creator = reader.GetString("name"),
+                    Creator = reader.GetString("username"),
                     CreatorId = reader.GetUInt16("creator"),
+                    Category = reader.GetString("categoryname"),
+                    CategoryId = reader.GetUInt32("category"),
+                    CategoryColor = reader.GetString("color"),
                     Description = reader.GetString("description")
                 };
 
@@ -89,7 +93,8 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.description, Issue.creator, User.name from Issue JOIN User ON Issue.creator=User.id WHERE Issue.id = @issueId";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, category.name AS categoryname, category.color " +
+                "from Issue JOIN User ON Issue.creator=User.id JOIN category ON Issue.category=category.id WHERE Issue.id = @issueId";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
             // Prepare WHERE value
             command.Parameters.AddWithValue("@issueID", id);
@@ -97,14 +102,17 @@ namespace server.Models
             // Execute command
             using MySqlDataReader reader = command.ExecuteReader();
 
-            reader.Read();
+            reader.Read();      // TODO: Need some kind of error catching for invalid queries
             Issue issue = new Issue
             {
                 Id = reader.GetUInt32("id"),
                 Title = reader.GetString("title"),
                 Priority = reader.GetInt16("priority"),
-                Creator = reader.GetString("name"),
+                Creator = reader.GetString("username"),
                 CreatorId = reader.GetUInt16("creator"),
+                Category = reader.GetString("categoryname"),
+                CategoryId = reader.GetUInt32("category"),
+                CategoryColor = reader.GetString("color"),
                 Description = reader.GetString("description")
             };
 
@@ -122,16 +130,17 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "INSERT INTO Issue (title, priority, description, creator) VALUES (@issueTitle, @issuePriority, @issueDescription, @issueCreator)"; // Let auto_increment handle the new id
-            using MySqlCommand insertCommand = new MySqlCommand(QUERYSTRING, conn);
+            string QUERYSTRING = "INSERT INTO Issue (title, priority, description, creator, category) VALUES (@issueTitle, @issuePriority, @issueDescription, @issueCreator, @issueCategory)"; // Let auto_increment handle the new id
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
             // Prepare VALUES
-            insertCommand.Parameters.AddWithValue("@issueTitle", issue.Title);
-            insertCommand.Parameters.AddWithValue("@issuePriority", issue.Priority);
-            insertCommand.Parameters.AddWithValue("@issueDescription", issue.Description);
-            insertCommand.Parameters.AddWithValue("@issueCreator", issue.CreatorId);
-            insertCommand.Prepare();
+            command.Parameters.AddWithValue("@issueTitle", issue.Title);
+            command.Parameters.AddWithValue("@issuePriority", issue.Priority);
+            command.Parameters.AddWithValue("@issueDescription", issue.Description);
+            command.Parameters.AddWithValue("@issueCreator", issue.CreatorId);
+            command.Parameters.AddWithValue("@issueCategory", issue.CategoryId);
+            command.Prepare();
             // Execute command
-            insertCommand.ExecuteNonQuery();
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -145,13 +154,14 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "UPDATE Issue SET title=@issueTitle, priority=@issuePriority, description=@issueDescription, creator=@issueCreatorId WHERE id=@issueId";
+            string QUERYSTRING = "UPDATE Issue SET title=@issueTitle, priority=@issuePriority, description=@issueDescription, creator=@issueCreatorId, category=@issueCategoryId WHERE id=@issueId";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
             // Prepare values
             command.Parameters.AddWithValue("@issueTitle", issue.Title);
             command.Parameters.AddWithValue("@issuePriority", issue.Priority);
             command.Parameters.AddWithValue("@issueDescription", issue.Description);
             command.Parameters.AddWithValue("@issueCreatorId", issue.CreatorId);
+            command.Parameters.AddWithValue("@issueCategoryId", issue.CategoryId);
             command.Parameters.AddWithValue("@issueId", issue.Id);
             command.Prepare();
             // Execute command
@@ -176,6 +186,39 @@ namespace server.Models
             command.Prepare();
             // Execute command
             command.ExecuteNonQuery();
+        }
+
+        public List<Category> GetCategories()
+        {
+            // Temp list to hold categories
+            List<Category> categories = new List<Category>();
+
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "SELECT * FROM category";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Execute command
+            using MySqlDataReader reader = command.ExecuteReader();
+
+            // Loop through all results
+            while (reader.Read())
+            {
+                // Create a new Issue object from result data
+                Category category = new Category
+                {
+                    Id = reader.GetUInt32("id"),
+                    Name = reader.GetString("name"),
+                    Color = reader.GetString("color")
+                };
+
+                // Add result to list
+                categories.Add(category);
+            }
+
+            return categories;
         }
 
         // Returns a formed connection string for MySql database connections

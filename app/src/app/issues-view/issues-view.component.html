@@ -1,14 +1,24 @@
-<button type="button" id="new-issue" [routerLink]="['detail']">
-    New Issue
-</button>
-<ul class="issue-list">
-    <li *ngFor="let issue of issues">
-        
-        <div class="issue-list-item">
-            <span class="priority">{{issue.priority}}</span>
-            <span class="title"><a class="issue-item-link" routerLink="detail/{{issue.id}}">{{issue.title}}</a></span>
-            <span class="creator">{{issue.creator}}</span>   
-            <span class="delete"><a (click)="deleteIssue(issue)">x</a></span>             
+<div class="issues-view">
+    <!--<button type="button" id="new-issue" [routerLink]="['detail']">
+        New Issue
+    </button>-->
+    <ul class="issue-list">
+        <li *ngFor="let issue of issues">
+            <div class="issue-list-item">
+                <span class="priority">{{issue.priority}}</span>
+                <span class="title"><a class="issue-item-link" routerLink="detail/{{issue.id}}">{{issue.title}}</a></span>
+                <span class="category" [ngStyle]="{'background-color': issue.categoryColor}">{{issue.category}}</span>
+                <!--<span class="creator">{{issue.creator}}</span>-->
+                <span class="delete control-button" *ngIf="editMode"><a (click)="deleteIssue(issue)"><i class="fa-solid fa-xmark fa-fw"></i></a></span>             
+            </div>
+        </li>
+        <div class="controls">
+            <a class="control-button" [routerLink]="['detail']"><i class="fa-solid fa-plus fa-fw"></i></a>
+            <a class="control-button" (click)="toggleEditMode()"><i class="fa-solid fa-minus fa-fw"></i></a>
         </div>
-    </li>
-</ul>
+    </ul>
+</div>
+
+<div class="categories">
+    <app-categories-bar></app-categories-bar>
+</div>

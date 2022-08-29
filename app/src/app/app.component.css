@@ -1,4 +1,4 @@
-#grid {
+/*#grid {
     display: grid;
     gap: 1rem;
     grid-template-areas:
@@ -8,10 +8,10 @@
     grid-template-columns: auto 11rem;
     grid-template-rows: 6rem auto 1rem;
     width: 100%;
-}
+}*/
 
 #top-bar {
-    grid-area: nav;
+    /*grid-area: nav;*/
     position: fixed;
     overflow: hidden;
     top: 0;
@@ -19,19 +19,21 @@
     width: 100%;
     border-bottom: 1px solid;
     padding: 0 1rem 1rem 1rem;
+    background-color: white;
 }
 
-#categories-bar {
+/*#categories-bar {
     grid-area: sidebar;
     height: 60rem; /* Probably make this variable height later? */
-}
+/*}*/
 
 #main-view {
-    grid-area: body;
+    /*grid-area: body;*/
+    margin-top: 8rem;
 }
 
 #footer {
-    grid-area: foot;
+    /*grid-area: foot;*/
     position: fixed;
     overflow: hidden;
     width: 100%;
@@ -39,4 +41,5 @@
     bottom: 0;
     padding: 1rem;
     border-top: 1px solid;
+    background-color: white;
 }

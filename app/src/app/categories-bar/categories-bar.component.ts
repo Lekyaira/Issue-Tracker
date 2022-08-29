@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Category } from '../category';
+
+import { IssueService } from '../issue.service';
 
 @Component({
   selector: 'app-categories-bar',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoriesBarComponent implements OnInit {
 
-  constructor() { }
+  categories: Category[] = [];
+
+  constructor(
+    private issueService: IssueService
+  ) { }
 
   ngOnInit(): void {
+    this.issueService.getCategories().subscribe(categories => this.categories = categories);
+  }
+
+  newCategory(): void {
+    
   }
 
 }

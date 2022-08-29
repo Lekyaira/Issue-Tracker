@@ -29,7 +29,8 @@ namespace server
             {
                 options.AddPolicy("Development", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200")
+                    policy.AllowAnyOrigin()
+                    //policy.WithOrigins("http://localhost:4200", "http://192.168.1.162:4200")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });

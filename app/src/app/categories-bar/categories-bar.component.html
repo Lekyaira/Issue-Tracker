@@ -1,3 +1,17 @@
 <div class="categories">
-    <h3>Categories</h3>
+    <h3>Category</h3>
+    <ul class="categories-list"> <!--TODO: Need an option to edit categories here-->
+        <li>
+            <div class="category">
+                <div class="category-badge all-categories"></div>
+                All Categorties
+            </div>
+        </li>
+        <li *ngFor="let category of categories">
+            <div class="category">
+                <div class="category-badge" [ngStyle]="{'background-color': category.color}"></div>
+                {{category.name}}
+            </div> <!--TODO: This needs to be a link to filter by category-->
+        </li>
+    </ul>
 </div>

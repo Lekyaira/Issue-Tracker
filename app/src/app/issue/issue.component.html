@@ -1,19 +1,41 @@
 <div *ngIf="issue">
     <div class="issue-details">
         <label for="title">Title:</label>
-        <input type="text" id="title" name="title" [(ngModel)]="issue.title">
+        <input type="text" class="text-field" id="title" name="title" [(ngModel)]="issue.title">
     </div>
     <div class="issue-details">
         <label for="creator">Creator:</label>
-        <input type="text" id="creator" readonly [(ngModel)]="issue.creator">
+        <input type="text" class="text-field" id="creator" readonly [(ngModel)]="issue.creator">
     </div>
     <div class="issue-details">
         <label for="priority">Priority:</label>
-        <input type="number" id="priority" min="1" max="10" [(ngModel)]="issue.priority">
+        <input type="number" class="text-field" id="priority" min="1" max="10" [(ngModel)]="issue.priority">
+    </div>
+    <div class="issue-details">
+        <label for="category">Category:</label>
+        <!--<select name="category" [(ngModel)]="issue.categoryId">
+            <option value="" disabled>Choose a category</option>
+            <option *ngFor="let category of categories" [ngValue]="category.id">
+                <span class="category-color" [ngStyle]="{'background-color': category.color}"></span>
+                {{category.name}}
+            </option>
+        </select>-->
+        <div class="dropdown">
+            <span class="category-color" [ngStyle]="{'background-color': issue.categoryColor}"></span>
+            <span>{{issue.category}}</span><i class="dropdown-arrow fa-solid fa-angle-down"></i>
+            <div class="dropdown-content">
+                <div class="dropdown-item" *ngFor="let category of categories">
+                    <a (click)="setCategory(category.id, category.name, category.color)">
+                        <span class="category-color" [ngStyle]="{'background-color': category.color}"></span>
+                        {{category.name}}
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
     <angular-editor [(ngModel)]="issue.description" [config]="config"></angular-editor>
     <div class="control-buttons">
-        <button type="button" (click)="goBack()">Cancel</button>
-        <button type="button" (click)="save()">Save</button>
+        <button type="button" class="button" (click)="goBack()">Cancel</button>
+        <button type="button" class="button" (click)="save()">Save</button>
     </div>
 </div>

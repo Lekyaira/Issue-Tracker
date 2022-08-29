@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IssueService } from '../issue.service';
 import { Issue } from '../issue';
+import { Category } from '../category';
 
 // declare var RichTextEditor: any;
 
@@ -18,6 +19,7 @@ export class IssueComponent implements OnInit {
 
   @Input() issue?: Issue;
   htmlContent = '';
+  categories: Category[] = [];
 
   config: AngularEditorConfig = {
     editable: true,
@@ -47,18 +49,24 @@ export class IssueComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Get the issue id from url
     const id = Number(this.route.snapshot.paramMap.get("id"));
-    console.log(id);
+    // If there was an id in the url, pull it from the service
     if(id){
       this.issueService.getIssue(id).subscribe(issue => this.issue = issue);
-    } else {
+    } else {  // Otherwise, create a new issue
       this.issue = {
         title: 'New Issue',
         priority: 1,
         creator: 'Ryan',    // TODO: Get creator info from current users
-        creatorId: 1
+        creatorId: 1,
+        category: '',
+        categoryId: 1
       }
     }
+
+    // Get all categories to populate select list
+    this.issueService.getCategories().subscribe(categories => this.categories = categories);
   }
 
   goBack(): void {
@@ -67,12 +75,21 @@ export class IssueComponent implements OnInit {
 
   save(): void {
     if(this.issue){
+      console.log(this.issue);
       if(this.issue.id){
         this.issueService.updateIssue(this.issue).subscribe();
       } else {
         this.issueService.createIssue(this.issue).subscribe();
       }
       this.location.back();
+    }
+  }
+
+  setCategory(id: number, name: string, color: string): void {
+    if(this.issue) {
+      this.issue.categoryId = id;
+      this.issue.category = name;
+      this.issue.categoryColor = color;
     }
   }
 }

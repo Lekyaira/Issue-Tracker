@@ -1,3 +1,13 @@
+.issues-view {
+    margin-right: 12rem;
+}
+
+.categories {
+    position: fixed;
+    right: 1rem;
+    top: 8rem;
+}
+
 .issue-list {
     list-style-type: none;
     margin: 0 0.2rem 0 0;
@@ -48,20 +58,22 @@
 }
 
 .delete {
-    margin-right: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
+    margin-right: 0.5rem;
+    /*font-family: Arial, Helvetica, sans-serif;*/
+    /*font-family: monospace;
+    font-weight: bold;
+    font-size: 1rem;*/
 }
 
 .delete a {
     color: red;
 }
 
-a {
-    text-decoration: none;
-    color: black;
-}
-
-#new-issue {
-    font-size: large;
-    float: right;
+.category {
+    border-radius: 20px;
+    padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 0.7rem;
+    margin: 0 0.5rem 0 0.5rem;
 }

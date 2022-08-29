@@ -12,6 +12,7 @@ import { IssueService } from '../issue.service';
 export class IssuesViewComponent implements OnInit {
 
   issues: Issue[] = [];
+  editMode: boolean = false;
 
   constructor(
     private issueService: IssueService,
@@ -29,5 +30,9 @@ export class IssuesViewComponent implements OnInit {
       // Remove the delete item from the list so that the UI reflects the delete
       this.issues = this.issues.filter(i => i !== issue);
     }
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
   }
 }
