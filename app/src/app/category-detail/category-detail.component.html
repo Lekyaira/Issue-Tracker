@@ -1,1 +1,14 @@
-<p>category-detail works!</p>
+<div id="details" *ngIf="category">
+    <div class="category-details">
+        <label for="name">Name:</label>
+        <input type="text" class="text-field" id="name" [(ngModel)]="category.name">
+    </div>
+    <div class="category-details">
+        <label for="color">Color:</label>
+        <input type="color" class="color-input" id="color" [(ngModel)]="category.color">
+    </div>
+    <div class="control-buttons">
+        <button type="button" class="button" (click)="goBack()">Cancel</button>
+        <button type="button" class="button" (click)="save()">Save</button>
+    </div>
+</div>

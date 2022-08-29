@@ -4,14 +4,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Issue } from './issue';
-import { Category } from './category';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IssueService {
   private issuesUrl = "https://localhost:5001/api/issue"; //TODO: Add production URL
-  private categoriesUrl = "https://localhost:5001/api/category";
 
   constructor(
     private http: HttpClient,
@@ -37,9 +35,5 @@ export class IssueService {
   deleteIssue(id: number): Observable<any> {
     const url = `${this.issuesUrl}/${id}`;
     return this.http.delete(url);
-  }
-
-  getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.categoriesUrl);
   }
 }

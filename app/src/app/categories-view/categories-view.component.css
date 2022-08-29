@@ -8,6 +8,7 @@
 }
 
 .categories li {
+    display: flex;
     border-radius: 5px;
     margin: 0.2rem;
 }
@@ -16,6 +17,7 @@
     padding: 0.2rem;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .categories li:hover {
@@ -36,4 +38,8 @@
     margin-right: 0.5rem;
     border-radius: 100%;
     border: 1px solid;
+}
+
+.delete-button a {
+    color: red;
 }

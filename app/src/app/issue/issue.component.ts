@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IssueService } from '../issue.service';
 import { Issue } from '../issue';
+import { CategoryService } from '../category.service';
 import { Category } from '../category';
 
 // declare var RichTextEditor: any;
@@ -45,6 +46,7 @@ export class IssueComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
+    private categoryService: CategoryService,
     private location: Location,
   ) {}
 
@@ -66,7 +68,7 @@ export class IssueComponent implements OnInit {
     }
 
     // Get all categories to populate select list
-    this.issueService.getCategories().subscribe(categories => this.categories = categories);
+    this.categoryService.getCategories().subscribe(categories => this.categories = categories);
   }
 
   goBack(): void {
@@ -85,9 +87,9 @@ export class IssueComponent implements OnInit {
     }
   }
 
-  setCategory(id: number, name: string, color: string): void {
+  setCategory(id: number | undefined, name: string, color: string): void {
     if(this.issue) {
-      this.issue.categoryId = id;
+      this.issue.categoryId = id ? id : 1;
       this.issue.category = name;
       this.issue.categoryColor = color;
     }

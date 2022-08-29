@@ -15,7 +15,7 @@ namespace server.Controllers
     public class IssueController : ControllerBase
     {
         // Create a database connection
-        private Database db = new Database("localhost", "ryan", "Taradhve", "IssueTracker");
+        private readonly Database db = new Database("localhost", "ryan", "Taradhve", "IssueTracker");
 
         // Returns all issues
         // GET /api/issue
@@ -30,7 +30,7 @@ namespace server.Controllers
         // GET /api/issue/:id
         [EnableCors("Development")]
         [HttpGet("{id}")]
-        public Issue getIssue(int id)
+        public Issue getIssue(uint id)
         {
             return db.GetIssue(id);
         }
@@ -57,7 +57,7 @@ namespace server.Controllers
         // delete /api/issue/:id
         [EnableCors("Development")]
         [HttpDelete("{id}")]
-        public void deleteIssue(int id)
+        public void deleteIssue(uint id)
         {
             db.DeleteIssue(id);
         }

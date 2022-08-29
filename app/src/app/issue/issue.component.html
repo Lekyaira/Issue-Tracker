@@ -9,7 +9,12 @@
     </div>
     <div class="issue-details">
         <label for="priority">Priority:</label>
-        <input type="number" class="text-field" id="priority" min="1" max="10" [(ngModel)]="issue.priority">
+        <!--<input type="number" class="text-field" id="priority" min="1" max="10" [(ngModel)]="issue.priority">-->
+        <div class="number-input">
+            <button class="number-input-button number-input-minus" onClick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="fa-solid fa-minus"></i></button>
+            <input type="number" class="number-input-quantity" min="1" max="10" value="1" name="priority">
+            <button class="number-input-button number-input-plus" onClick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="fa-solid fa-plus"></i></button>
+        </div>
     </div>
     <div class="issue-details">
         <label for="category">Category:</label>

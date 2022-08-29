@@ -12,6 +12,7 @@ const routes: Routes = [
   {path: 'issues/detail', component: IssueComponent},
   {path: 'categories', component: CategoriesViewComponent},
   {path: 'categories/detail/:id', component: CategoryDetailComponent},
+  {path: 'categories/detail', component: CategoryDetailComponent},
 ];
 
 @NgModule({

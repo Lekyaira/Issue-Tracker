@@ -36,6 +36,14 @@ namespace server.Models
             DB = database;
         }
 
+        // Returns a formed connection string for MySql database connections
+        private string GetConnectionString()
+        {
+            return $"server={Server};userid={User};password={Password};database={DB}";
+        }
+
+        // ISSUECONTROLLER
+
         /// <summary>
         /// Get all issues from database
         /// </summary>
@@ -50,8 +58,8 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, Category.name AS categoryname, Category.color " +
-                "FROM Issue JOIN User ON Issue.creator=User.id JOIN category ON Issue.category=category.id";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, IFNULL(Category.name, 'undefined') AS categoryname, IFNULL(Category.color, 'undefined') AS color " +
+                "FROM Issue JOIN User ON Issue.creator=User.id LEFT JOIN category ON Issue.category=category.id";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
 
             using MySqlDataReader reader = command.ExecuteReader();
@@ -59,6 +67,10 @@ namespace server.Models
             // Loop through all results
             while (reader.Read())
             {
+                string? catName = reader.GetString("categoryname");
+                if (catName == "undefined") catName = null;
+                string? catColor = reader.GetString("color");
+                if (catColor == "undefined") catColor = null;
                 // Create a new Issue object from result data
                 Issue issue = new Issue
                 {
@@ -67,9 +79,9 @@ namespace server.Models
                     Priority = reader.GetInt16("priority"),
                     Creator = reader.GetString("username"),
                     CreatorId = reader.GetUInt16("creator"),
-                    Category = reader.GetString("categoryname"),
+                    Category = catName,
                     CategoryId = reader.GetUInt32("category"),
-                    CategoryColor = reader.GetString("color"),
+                    CategoryColor = catColor,
                     Description = reader.GetString("description")
                 };
 
@@ -86,15 +98,15 @@ namespace server.Models
         /// </summary>
         /// <param name="id">Id of the issue to be retreived</param>
         /// <returns>Issue from database by id</returns>
-        public Issue GetIssue(int id)
+        public Issue GetIssue(uint id)
         {
             // connect to the database
             using MySqlConnection conn = new MySqlConnection(GetConnectionString());
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, category.name AS categoryname, category.color " +
-                "from Issue JOIN User ON Issue.creator=User.id JOIN category ON Issue.category=category.id WHERE Issue.id = @issueId";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, IFNULL(category.name, 'undefined') AS categoryname, IFNULL(category.color, 'undefined') AS color " +
+                "from Issue JOIN User ON Issue.creator=User.id LEFT JOIN category ON Issue.category=category.id WHERE Issue.id = @issueId";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
             // Prepare WHERE value
             command.Parameters.AddWithValue("@issueID", id);
@@ -103,6 +115,10 @@ namespace server.Models
             using MySqlDataReader reader = command.ExecuteReader();
 
             reader.Read();      // TODO: Need some kind of error catching for invalid queries
+            string? catName = reader.GetString("categoryname");
+            if (catName == "undefined") catName = null;
+            string? catColor = reader.GetString("color");
+            if (catColor == "undefined") catColor = null;
             Issue issue = new Issue
             {
                 Id = reader.GetUInt32("id"),
@@ -110,9 +126,9 @@ namespace server.Models
                 Priority = reader.GetInt16("priority"),
                 Creator = reader.GetString("username"),
                 CreatorId = reader.GetUInt16("creator"),
-                Category = reader.GetString("categoryname"),
+                Category = catName,
                 CategoryId = reader.GetUInt32("category"),
-                CategoryColor = reader.GetString("color"),
+                CategoryColor = catColor,
                 Description = reader.GetString("description")
             };
 
@@ -172,7 +188,7 @@ namespace server.Models
         /// Deletes an existing issue by id
         /// </summary>
         /// <param name="id">Id of issue to delete</param>
-        public void DeleteIssue(int id)
+        public void DeleteIssue(uint id)
         {
             // connect to the database
             using MySqlConnection conn = new MySqlConnection(GetConnectionString());
@@ -188,6 +204,10 @@ namespace server.Models
             command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Gets all categories from database
+        /// </summary>
+        /// <returns>List of category objects</returns>
         public List<Category> GetCategories()
         {
             // Temp list to hold categories
@@ -221,10 +241,100 @@ namespace server.Models
             return categories;
         }
 
-        // Returns a formed connection string for MySql database connections
-        private string GetConnectionString()
+        // CATEGORYCONTROLLER
+
+        /// <summary>
+        /// Gets a specific category from database by id
+        /// </summary>
+        /// <param name="id">Id of category to retreive</param>
+        /// <returns>Category</returns>
+        public Category GetCategory(uint id)
         {
-            return $"server={Server};userid={User};password={Password};database={DB}";
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "SELECT * FROM Category WHERE id=@categoryId";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare WHERE value
+            command.Parameters.AddWithValue("@categoryId", id);
+            command.Prepare();
+            // Execute command
+            using MySqlDataReader reader = command.ExecuteReader();
+
+            reader.Read();      // TODO: Need some kind of error catching for invalid queries
+            Category category = new Category
+            {
+                Id = reader.GetUInt32("id"),
+                Name = reader.GetString("name"),
+                Color = reader.GetString("color")
+            };
+
+            return category;
+        }
+
+        /// <summary>
+        /// Create a new category
+        /// </summary>
+        /// <param name="category">Category to be created</param>
+        public void CreateCategory(Category category)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "INSERT INTO Category (name, color) VALUES (@categoryName, @categoryColor)"; // Let auto_increment handle the new id
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare VALUES
+            command.Parameters.AddWithValue("@categoryName", category.Name);
+            command.Parameters.AddWithValue("@categoryColor", category.Color);
+            command.Prepare();
+            // Execute command
+            command.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Update an existing category
+        /// </summary>
+        /// <param name="category">Category to update. Database id will be pulled from this object.</param>
+        public void UpdateCategory(Category category)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "UPDATE Category SET name=@categoryName, color=@categoryColor WHERE id=@categoryId";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare values
+            command.Parameters.AddWithValue("@categoryName", category.Name);
+            command.Parameters.AddWithValue("@categoryColor", category.Color);
+            command.Parameters.AddWithValue("@categoryId", category.Id);
+            command.Prepare();
+            // Execute command
+            command.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Deletes an existing category by id
+        /// </summary>
+        /// <param name="id">Id of category to delete</param>
+        public void DeleteCategory(uint id)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "DELETE FROM Category WHERE id=@categoryId";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare value
+            command.Parameters.AddWithValue("@categoryId", id);
+            command.Prepare();
+            // Execute command
+            command.ExecuteNonQuery();
         }
     }
 }

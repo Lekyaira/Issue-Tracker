@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { IssueService } from '../issue.service';
+import { CategoryService } from '../category.service';
 import { Category } from '../category';
 
 @Component({
@@ -11,13 +11,27 @@ import { Category } from '../category';
 export class CategoriesViewComponent implements OnInit {
 
   categories: Category[] = []
+  editMode: boolean = false;
 
   constructor(
-    private issueService: IssueService
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit(): void {
-    this.issueService.getCategories().subscribe(categories => this.categories = categories);
+    this.categoryService.getCategories().subscribe(categories => this.categories = categories);
+  }
+
+  toggleEdit(): void {
+    this.editMode = !this.editMode;
+  }
+
+  deleteCategory(category: Category): void {
+    if(category.id){
+      // Delete the category from database
+      this.categoryService.deleteCategory(category.id).subscribe();
+      // Remove the category from the displayed list
+      this.categories = this.categories.filter(i => i !== category);
+    }
   }
 
 }

@@ -1,8 +1,10 @@
+/* Global styling for hyperlinks */
 a {
     text-decoration: none;
     color: black;
 }
 
+/* Global styling for control buttons (+ - controls) */
 .control-button {
     font-size: 1.3rem;
     cursor: pointer;
@@ -14,6 +16,7 @@ a {
     margin: 0.5rem;
 }
 
+/* Global styling for buttons */
 .button {
     display: inline-block;
     background-color: white;
@@ -38,6 +41,7 @@ a {
     background-color: #eee;
 }
 
+/* Global styling for text fields */
 .text-field {
     border: 1px solid lightgray;
     font-family: 'Roboto', sans-serif;
@@ -48,6 +52,7 @@ a {
     margin: 0.1rem;
 }
 
+/* Global styling for dropdown boxes */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -85,7 +90,7 @@ a {
 }
 
 .dropdown:hover {
-    background-color: #ddd;
+    background-color: #eee;
 }
 
 .dropdown:hover .dropdown-content {
@@ -95,3 +100,66 @@ a {
 .dropdown-content:hover .dropdown-item:hover {
     background-color: #ddd;
 }
+
+/* Global styling for number inputs */
+input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+  
+  .number-input {
+    /*border: 1px solid #ddd;*/
+    display: inline-flex;
+    border: 1px solid #eee;
+  }
+  
+  .number-input,
+  .number-input * {
+    box-sizing: border-box;
+  }
+  
+  .number-input button {
+    outline:none;
+    -webkit-appearance: none;
+    display: flex;
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+  }
+
+  .number-input .number-input-minus {
+    border-right: 1px solid #eee;
+  }
+
+  .number-input .number-input-plus {
+    border-left: 1px solid #eee;
+  }
+
+  .number-input button:hover {
+    background-color: #eee;
+  }
+ 
+  .number-input input[type=number] {
+    font-family: sans-serif;
+    max-width: 3rem;
+    height: 1.2rem;
+    border: none;
+    /*border: solid #ddd;*/
+    /*border-width: 0 1px;*/
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 100;
+    text-align: center;
+  }

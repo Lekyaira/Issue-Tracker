@@ -35,4 +35,5 @@ export class IssuesViewComponent implements OnInit {
   toggleEditMode(): void {
     this.editMode = !this.editMode;
   }
+  
 }
