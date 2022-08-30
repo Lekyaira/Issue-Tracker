@@ -30,6 +30,7 @@
 #main-view {
     /*grid-area: body;*/
     margin-top: 8rem;
+    position: relative;
 }
 
 #footer {

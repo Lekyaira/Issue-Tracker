@@ -1,0 +1,105 @@
+.categories-bar {
+    position: fixed;
+    right: 1rem;
+    top: 8rem;
+}
+
+.filter-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 12rem;
+    height: 2rem;
+    font-family: "Roboto" sans-serif;
+    font-size: 1.3rem;
+    border-bottom: 1px solid;
+}
+
+.filter-bar .number-input {
+    margin-bottom: 0.2rem;
+}
+
+.filter-bar .number-input * {
+    font-size: 1rem;
+}
+
+.filter-bar .button {
+    width: 7rem;
+    position: absolute;
+    right: 1rem;
+}
+
+.dashboard {
+    position: absolute;
+    top: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 12rem;
+}
+
+.issue-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid;
+    border-radius: 2px;
+    align-items: center;
+    width: 14rem;
+    height: 14rem;
+    overflow: hidden;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.issue-card:hover {
+    border-color: lightblue;
+}
+
+.issue-card:hover .card-outline {
+    border: 5px solid lightblue;
+}
+
+.issue-card .card-outline {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    z-index: 1;
+}
+
+.issue-card .card-title {
+    border-bottom: 1px solid;
+    font-family: "Roboto" sans-serif;
+    font-size: 1.5rem;
+    width: 9rem;
+    text-align: center;
+    overflow: hidden;
+}
+
+.issue-card .card-priority {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Roboto" sans-serif;
+    font-size: 1.3rem;
+    background-color: #ddd;
+    border-radius: 2px 0 10px 0;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+}
+
+.issue-card .card-details {
+    align-self: flex-start;
+    margin: 0.8rem;
+    height: 10.5rem;
+    overflow: hidden;
+}

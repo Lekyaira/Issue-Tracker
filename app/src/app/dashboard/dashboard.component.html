@@ -1,0 +1,22 @@
+<div class="filter-bar">
+    <label for="filter-priority">Priority: </label>
+    <div class="number-input">
+        <button class="number-input-button number-input-minus" onClick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="fa-solid fa-minus"></i></button>
+        <input type="number" #priorityFilterValue class="number-input-quantity" min="1" max="10" value="1" id="filter-priority">
+        <button class="number-input-button number-input-plus" onClick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="fa-solid fa-plus"></i></button>
+    </div>
+    <button type="button" class="button" (click)="filterIssues()">Apply Filter</button>
+</div>
+<div class="dashboard">
+    <a *ngFor="let issue of filteredIssues" routerLink="/issues/detail/{{issue.id}}">
+        <div class="issue-card" [ngStyle]="{'background-color': issue.categoryColor}">
+            <div class="card-outline"></div>
+            <div class="card-priority">{{issue.priority}}</div>
+            <div class="card-title">{{issue.title}}</div>
+            <div class="card-details" [innerHtml]="issue.description"></div>
+        </div>
+    </a>
+</div>
+<div class="categories-bar">
+    <app-categories-bar></app-categories-bar>
+</div>

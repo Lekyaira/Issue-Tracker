@@ -4,6 +4,7 @@ import { IssueComponent } from './issue/issue.component';
 import { IssuesViewComponent } from './issues-view/issues-view.component';
 import { CategoriesViewComponent } from './categories-view/categories-view.component';
 import { CategoryDetailComponent } from './category-detail/category-detail.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   {path: 'issues', component: IssuesViewComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'categories', component: CategoriesViewComponent},
   {path: 'categories/detail/:id', component: CategoryDetailComponent},
   {path: 'categories/detail', component: CategoryDetailComponent},
+  {path: 'dashboard', component: DashboardComponent},
 ];
 
 @NgModule({

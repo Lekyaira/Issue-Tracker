@@ -12,6 +12,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { CategoriesBarComponent } from './categories-bar/categories-bar.component';
 import { CategoriesViewComponent } from './categories-view/categories-view.component';
 import { CategoryDetailComponent } from './category-detail/category-detail.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { CategoryDetailComponent } from './category-detail/category-detail.compo
     TopBarComponent,
     CategoriesBarComponent,
     CategoriesViewComponent,
-    CategoryDetailComponent
+    CategoryDetailComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

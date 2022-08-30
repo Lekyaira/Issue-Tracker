@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
@@ -21,6 +21,7 @@ export class IssueComponent implements OnInit {
   @Input() issue?: Issue;
   htmlContent = '';
   categories: Category[] = [];
+  @ViewChild("priority") priorityValue!: ElementRef;
 
   config: AngularEditorConfig = {
     editable: true,
@@ -55,7 +56,10 @@ export class IssueComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get("id"));
     // If there was an id in the url, pull it from the service
     if(id){
-      this.issueService.getIssue(id).subscribe(issue => this.issue = issue);
+      this.issueService.getIssue(id).subscribe(issue => {
+        this.issue = issue;
+        console.log("load");
+      });
     } else {  // Otherwise, create a new issue
       this.issue = {
         title: 'New Issue',
@@ -77,7 +81,8 @@ export class IssueComponent implements OnInit {
 
   save(): void {
     if(this.issue){
-      console.log(this.issue);
+      console.log(this.priorityValue);
+      this.issue.priority = Number(this.priorityValue.nativeElement.value);
       if(this.issue.id){
         this.issueService.updateIssue(this.issue).subscribe();
       } else {

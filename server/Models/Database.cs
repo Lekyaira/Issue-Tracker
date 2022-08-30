@@ -59,7 +59,7 @@ namespace server.Models
 
             // Create the query and execute
             string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, IFNULL(Category.name, 'undefined') AS categoryname, IFNULL(Category.color, 'undefined') AS color " +
-                "FROM Issue JOIN User ON Issue.creator=User.id LEFT JOIN category ON Issue.category=category.id";
+                "FROM Issue JOIN User ON Issue.creator=User.id LEFT JOIN category ON Issue.category=category.id ORDER BY Issue.priority";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
 
             using MySqlDataReader reader = command.ExecuteReader();
