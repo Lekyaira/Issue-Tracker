@@ -8,7 +8,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   {path: 'issues', component: IssuesViewComponent},
-  {path: '', redirectTo: '/issues', pathMatch: 'full'},
+  {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {path: 'issues/detail/:id', component: IssueComponent},
   {path: 'issues/detail', component: IssueComponent},
   {path: 'categories', component: CategoriesViewComponent},

@@ -5,6 +5,7 @@
 
 .nav-item {
     margin: 0 0 0 1rem;
+    cursor: pointer;
 }
 
 .nav-item a:hover {

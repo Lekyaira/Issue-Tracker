@@ -44,3 +44,7 @@
     border-top: 1px solid;
     background-color: white;
 }
+
+#logged-out {
+    margin-left: 4rem;
+}

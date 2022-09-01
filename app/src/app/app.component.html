@@ -1,5 +1,10 @@
 <div id="grid">
     <div id="top-bar"><app-top-bar></app-top-bar></div>
-    <div id="main-view"><router-outlet></router-outlet></div>
+    <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+        <div id="main-view"><router-outlet></router-outlet></div>
+    </ng-container>
+    <ng-template #loggedOut>
+        <div id="main-view"><h2 id="logged-out">Not logged in</h2></div> <!--Replace this with a splash page-->
+    </ng-template>
     <div id="footer">Created by Ryan W. Anderson</div>
 </div>

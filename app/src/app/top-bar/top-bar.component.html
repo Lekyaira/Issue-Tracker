@@ -12,7 +12,20 @@
     <span class="nav-item">
         Project
     </span>
-    <span class="nav-item">
-        Account
-    </span>
+    <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+        <span class="nav-item" *ngIf="auth.user$ | async as user">
+            {{user.given_name}}:
+        </span>
+        <span class="nav-item">
+            Account
+        </span>
+        <span class="nav-item">
+            <a (click)="auth.logout({returnTo: document.location.origin})">Log out</a>
+        </span>
+    </ng-container>
+    <ng-template #loggedOut>
+        <span class="nav-item">
+            <a (click)="auth.loginWithRedirect()">Log in</a>
+        </span>
+    </ng-template>
 </div>

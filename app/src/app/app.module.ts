@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { AngularEditorModule } from '@kolkov/angular-editor';
 import { FormsModule } from '@angular/forms';
+
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { AuthModule } from '@auth0/auth0-angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,7 +25,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     CategoriesBarComponent,
     CategoriesViewComponent,
     CategoryDetailComponent,
-    DashboardComponent
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,6 +33,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HttpClientModule,
     AngularEditorModule,
     FormsModule,
+
+    // Import Auth0 module with configuration data
+    AuthModule.forRoot({
+      domain: 'dev-7gr-w4iu.us.auth0.com',
+      clientId: 'C3oBVzWpIfGUDgetkjQwh4G1XsgNdD6W',
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

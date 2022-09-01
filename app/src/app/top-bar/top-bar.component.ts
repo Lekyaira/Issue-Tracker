@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-top-bar',
@@ -7,7 +10,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TopBarComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public auth: AuthService,
+    @Inject(DOCUMENT) public document: Document,
+  ) { }
 
   ngOnInit(): void {
   }
