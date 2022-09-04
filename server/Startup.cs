@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace server
 {
@@ -35,6 +37,18 @@ namespace server
                         .AllowAnyMethod();
                 });
             });
+
+            // Set up authentication services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://dev-7gr-w4iu.us.auth0.com/";
+                options.Audience = "portfolio/IssueTracker";
+            });
+
             services.AddControllers();
         }
 
@@ -53,6 +67,9 @@ namespace server
             app.UseCors();
 
             app.UseAuthorization();
+
+            // Enable authentication services
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
