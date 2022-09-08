@@ -6,12 +6,12 @@ export const environment = {
   production: false,
   auth: {
     domain: "dev-7gr-w4iu.us.auth0.com",
-    clientId: "oMU4lb910jdDU5SAQvkQj69KYMdrQ0aW",
+    clientId: "C3oBVzWpIfGUDgetkjQwh4G1XsgNdD6W",
     redirectUrl: window.location.origin,
-    audience: "http://localhost:4200",
+    audience: "portfolio/IssueTracker",
   },
   dev: {
-    serverUrl: "http://localhost:5000",
+    serverUrl: "https://localhost:5001",
   }
 };
 

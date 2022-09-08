@@ -6,8 +6,10 @@ import { CategoriesViewComponent } from './categories-view/categories-view.compo
 import { CategoryDetailComponent } from './category-detail/category-detail.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
+import { AuthGuard } from '@auth0/auth0-angular';
+
 const routes: Routes = [
-  {path: 'issues', component: IssuesViewComponent},
+  {path: 'issues', component: IssuesViewComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {path: 'issues/detail/:id', component: IssueComponent},
   {path: 'issues/detail', component: IssueComponent},

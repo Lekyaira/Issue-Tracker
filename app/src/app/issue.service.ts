@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Issue } from './issue';
+import { IssueAppUser } from './issue-app-user';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,9 @@ export class IssueService {
     return this.http.get<Issue[]>(this.issuesUrl);
   }
 
-  getIssue(id: number): Observable<Issue> {
+  getIssue(id: number): Observable<IssueAppUser> {
     const url = `${this.issuesUrl}/${id}`;
-    return this.http.get<Issue>(url);
+    return this.http.get<IssueAppUser>(url);
   }
 
   updateIssue(issue: Issue): Observable<any> {

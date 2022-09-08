@@ -6,8 +6,11 @@ import { FormsModule } from '@angular/forms';
 
 import { IssueService } from '../issue.service';
 import { Issue } from '../issue';
+import { AppUser } from '../app-user';
 import { CategoryService } from '../category.service';
 import { Category } from '../category';
+import { AuthService, User } from '@auth0/auth0-angular';
+import { UserService } from '../user.service';
 
 // declare var RichTextEditor: any;
 
@@ -19,6 +22,8 @@ import { Category } from '../category';
 export class IssueComponent implements OnInit {
 
   @Input() issue?: Issue;
+  @Input() issueUser?: AppUser;
+  // @Input() user?: User;
   htmlContent = '';
   categories: Category[] = [];
   @ViewChild("priority") priorityValue!: ElementRef;
@@ -48,7 +53,9 @@ export class IssueComponent implements OnInit {
     private route: ActivatedRoute,
     private issueService: IssueService,
     private categoryService: CategoryService,
+    private userService: UserService,
     private location: Location,
+    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -56,19 +63,27 @@ export class IssueComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get("id"));
     // If there was an id in the url, pull it from the service
     if(id){
-      this.issueService.getIssue(id).subscribe(issue => {
-        this.issue = issue;
-        console.log("load");
+      this.issueService.getIssue(id).subscribe(result => {
+        console.log(result);
+        this.issue = result.issue;
+        this.issueUser = result.user;
       });
     } else {  // Otherwise, create a new issue
-      this.issue = {
-        title: 'New Issue',
-        priority: 1,
-        creator: 'Ryan',    // TODO: Get creator info from current users
-        creatorId: 1,
-        category: '',
-        categoryId: 1
-      }
+      // Get the logged in user's info
+      this.userService.getCurrentUser().subscribe(result => {
+        this.issueUser = result;
+
+        // Create a new issue
+        this.issue = {
+          title: 'New Issue',
+          priority: 1,
+          creatorId: result.id,
+          category: '',
+          categoryId: 1
+        }
+      })
+      
+      
     }
 
     // Get all categories to populate select list

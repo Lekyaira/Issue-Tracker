@@ -16,9 +16,9 @@ export class TopBarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.auth.user$.subscribe(user => {
+    // this.auth.user$.subscribe(user => {
       
-    });
+    // });
   }
 
 }

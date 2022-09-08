@@ -18,6 +18,7 @@ import { CategoriesViewComponent } from './categories-view/categories-view.compo
 import { CategoryDetailComponent } from './category-detail/category-detail.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { environment as env } from '../environments/environment';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { environment as env } from '../environments/environment';
     CategoriesViewComponent,
     CategoryDetailComponent,
     DashboardComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,19 +41,23 @@ import { environment as env } from '../environments/environment';
 
     // Import Auth0 module with configuration data
     AuthModule.forRoot({
-      domain: 'dev-7gr-w4iu.us.auth0.com',
-      clientId: 'C3oBVzWpIfGUDgetkjQwh4G1XsgNdD6W',
+      ...env.auth,
+      // The AuthHttpInterceptor configuration
       httpInterceptor: {
-        allowedList: [`${env.dev.serverUrl}/api/issues`],
-      }
+        allowedList: [
+          {
+            uri: 'https://localhost:5001/api/*',
+            tokenOptions: {
+              audience: 'portfolio/IssueTracker',
+            }
+          },
+        ]
+      },
     }),
+    
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthHttpInterceptor,
-      multi: true,
-    }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

@@ -1,7 +1,9 @@
-﻿using RestSharp;
+﻿using System;
+using System.Threading.Tasks;
+using RestSharp;
 using RestSharp.Authenticators;
 
-namespace Auth0ManagementAccessTest
+namespace server.Models
 {
     /// <summary>
     /// Generates an access token for Auth0 management api from their server.
@@ -31,7 +33,6 @@ namespace Auth0ManagementAccessTest
             {
                 if (_token is null || Expires < DateTime.Now)
                 {
-                    GetToken().Wait();
                     _token = GetToken().Result;
                 }
                 return _token;

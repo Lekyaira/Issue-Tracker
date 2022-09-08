@@ -5,41 +5,41 @@ using MySql.Data.MySqlClient;           // Database access
 
 namespace server.Models
 {
-    public class Database
+    public class Database: IDatabase
     {
         // Properties
-        public string Server { get; set; } = "localhost";
-        public string User { get; set; } = "root";
-        public string Password { get; set; }
-        public string DB { get; set; }
+        //public string Server { get; set; } = "localhost";
+        //public string User { get; set; } = "root";
+        //public string Password { get; set; }
+        //public string DB { get; set; }
 
         /// <summary>
         /// Create a new empty database object
         /// </summary>
         public Database()
         {
-
+            
         }
 
-        /// <summary>
-        /// Create a new database object with connection properties
-        /// </summary>
-        /// <param name="server">Server path to connect to</param>
-        /// <param name="user">Username to connect with</param>
-        /// <param name="password">User password to connect with</param>
-        /// <param name="database">Database name</param>
-        public Database(string server, string user, string password, string database): base()
-        {
-            Server = server;
-            User = user;
-            Password = password;
-            DB = database;
-        }
+        ///// <summary>
+        ///// Create a new database object with connection properties
+        ///// </summary>
+        ///// <param name="server">Server path to connect to</param>
+        ///// <param name="user">Username to connect with</param>
+        ///// <param name="password">User password to connect with</param>
+        ///// <param name="database">Database name</param>
+        //public Database(string server, string user, string password, string database): base()
+        //{
+        //    Server = server;
+        //    User = user;
+        //    Password = password;
+        //    DB = database;
+        //}
 
         // Returns a formed connection string for MySql database connections
         private string GetConnectionString()
         {
-            return $"server={Server};userid={User};password={Password};database={DB}";
+            return $"server=localhost;userid=ryan;password=Taradhve;database=IssueTracker";
         }
 
         // ISSUECONTROLLER
@@ -58,8 +58,8 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, IFNULL(Category.name, 'undefined') AS categoryname, IFNULL(Category.color, 'undefined') AS color " +
-                "FROM Issue JOIN User ON Issue.creator=User.id LEFT JOIN category ON Issue.category=category.id ORDER BY Issue.priority";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, IFNULL(Category.name, 'undefined') AS categoryname, IFNULL(Category.color, 'undefined') AS color " +
+                "FROM Issue LEFT JOIN category ON Issue.category=category.id ORDER BY Issue.priority";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
 
             using MySqlDataReader reader = command.ExecuteReader();
@@ -77,8 +77,7 @@ namespace server.Models
                     Id = reader.GetUInt32("id"),
                     Title = reader.GetString("title"),
                     Priority = reader.GetInt16("priority"),
-                    Creator = reader.GetString("username"),
-                    CreatorId = reader.GetUInt16("creator"),
+                    CreatorId = reader.GetString("creator"),
                     Category = catName,
                     CategoryId = reader.GetUInt32("category"),
                     CategoryColor = catColor,
@@ -105,8 +104,8 @@ namespace server.Models
             conn.Open();
 
             // Create the query and execute
-            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, User.name AS username, IFNULL(category.name, 'undefined') AS categoryname, IFNULL(category.color, 'undefined') AS color " +
-                "from Issue JOIN User ON Issue.creator=User.id LEFT JOIN category ON Issue.category=category.id WHERE Issue.id = @issueId";
+            string QUERYSTRING = "SELECT Issue.id, Issue.title, Issue.priority, Issue.category, Issue.description, Issue.creator, IFNULL(category.name, 'undefined') AS categoryname, IFNULL(category.color, 'undefined') AS color " +
+                "from Issue LEFT JOIN category ON Issue.category=category.id WHERE Issue.id = @issueId";
             using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
             // Prepare WHERE value
             command.Parameters.AddWithValue("@issueID", id);
@@ -124,8 +123,7 @@ namespace server.Models
                 Id = reader.GetUInt32("id"),
                 Title = reader.GetString("title"),
                 Priority = reader.GetInt16("priority"),
-                Creator = reader.GetString("username"),
-                CreatorId = reader.GetUInt16("creator"),
+                CreatorId = reader.GetString("creator"),
                 Category = catName,
                 CategoryId = reader.GetUInt32("category"),
                 CategoryColor = catColor,

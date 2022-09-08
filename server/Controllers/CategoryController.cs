@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using server.Models;
 
@@ -15,51 +16,58 @@ namespace server.Controllers
     public class CategoryController : ControllerBase
     {
         // Create a database connection
-        private readonly Database db = new Database("localhost", "ryan", "Taradhve", "IssueTracker");
+        //private readonly Database db = new Database("localhost", "ryan", "Taradhve", "IssueTracker");
+
+        private readonly IDatabase _db;
+
+        public CategoryController(IDatabase database)
+        {
+            _db = database;
+        }
 
         // Returns all categories
         // GET /api/category
-        [EnableCors("Development")]
         [HttpGet]
+        [Authorize]
         public List<Category> GetCategories()
         {
-            return db.GetCategories();
+            return _db.GetCategories();
         }
 
         // Returns a specified category
         // GET /api/category/:id
-        [EnableCors("Development")]
+        [Authorize]
         [HttpGet("{id}")]
         public Category GetCategory(uint id)
         {
-            return db.GetCategory(id);
+            return _db.GetCategory(id);
         }
 
         // Create a new category
         // POST /api/category
-        [EnableCors("Development")]
+        [Authorize]
         [HttpPost]
         public void CreateCategory(Category category)
         {
-            db.CreateCategory(category);
+            _db.CreateCategory(category);
         }
 
         // Update an existing category by id
         // PUT /api/category
-        [EnableCors("Development")]
+        [Authorize]
         [HttpPut]
         public void UpdateCategory(Category category)
         {
-            db.UpdateCategory(category);
+            _db.UpdateCategory(category);
         }
 
         // Delete an existing category by id
         // delete /api/category/:id
-        [EnableCors("Development")]
+        [Authorize]
         [HttpDelete("{id}")]
         public void DeleteCategory(uint id)
         {
-            db.DeleteCategory(id);
+            _db.DeleteCategory(id);
         }
     }
 }

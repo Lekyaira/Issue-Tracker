@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Auth0ManagementAccessTest
+namespace server.Models
 {
     /// <summary>
     /// Consumes Auth0 REST server response for token.

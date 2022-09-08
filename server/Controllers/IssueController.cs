@@ -5,8 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
+using Auth0.ManagementApi;
+using Auth0.Core;
+using RestSharp;
 
 using server.Models;
+using System.Threading;
+using Ubiety.Dns.Core;
 
 namespace server.Controllers
 {
@@ -15,51 +23,78 @@ namespace server.Controllers
     public class IssueController : ControllerBase
     {
         // Create a database connection
-        private readonly Database db = new Database("localhost", "ryan", "Taradhve", "IssueTracker");
+        //private readonly Database db = new Database("localhost", "ryan", "Taradhve", "IssueTracker");
+
+        // Service to get Auth0 user data
+        private readonly IAuth0User _auth0User;
+
+        // Database service
+        private readonly IDatabase _db;
+
+        public IssueController(IAuth0User auth0User, IDatabase database)
+        {
+            _auth0User = auth0User;
+            _db = database;
+        }
 
         // Returns all issues
         // GET /api/issue
-        [EnableCors("Development")]
+        //[EnableCors("Development")]
         [HttpGet]
+        [Authorize]
         public List<Issue> getIssues()
         {
-            return db.GetIssues();
+            //var userName = User.Identity.Name;
+
+            //// Get user info from the Auth0 server
+            //User user = _auth0User.GetUserAsync(userName).Result;
+            //System.Console.WriteLine($"UserId: {userName}, User Name: {user.Name}, User Email: {user.Email}");
+
+
+            return _db.GetIssues();
         }
 
         // Returns a specified issue
         // GET /api/issue/:id
-        [EnableCors("Development")]
+        [Authorize]
         [HttpGet("{id}")]
-        public Issue getIssue(uint id)
+        public IssueUser getIssue(uint id)
         {
-            return db.GetIssue(id);
+            // Get the issue from the database
+            Issue issue = _db.GetIssue(id);
+
+            // Get the user data from Auth0 using the issue's creatorId
+            User user = _auth0User.GetUserAsync(issue.CreatorId).Result;
+
+            // Return the values
+            return new IssueUser { issue = issue, user = user };
         }
 
         // Create a new issue
         // POST /api/issue
-        [EnableCors("Development")]
+        [Authorize]
         [HttpPost]
         public void createIssue(Issue issue)
         {
-            db.CreateIssue(issue);
+            _db.CreateIssue(issue);
         }
 
         // Update an existing issue by id
         // PUT /api/issue
-        [EnableCors("Development")]
+        [Authorize]
         [HttpPut]
         public void updateIssue(Issue issue)
         {
-            db.UpdateIssue(issue);
+            _db.UpdateIssue(issue);
         }
 
         // Delete an existing issue by id
         // delete /api/issue/:id
-        [EnableCors("Development")]
+        [Authorize]
         [HttpDelete("{id}")]
         public void deleteIssue(uint id)
         {
-            db.DeleteIssue(id);
+            _db.DeleteIssue(id);
         }
     }
 }

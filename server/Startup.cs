@@ -12,6 +12,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Auth0.ManagementApi;
 
 namespace server
 {
@@ -31,23 +35,37 @@ namespace server
             {
                 options.AddPolicy("Development", policy =>
                 {
-                    policy.AllowAnyOrigin()
-                    //policy.WithOrigins("http://localhost:4200", "http://192.168.1.162:4200")
+                    //policy.AllowAnyOrigin()
+                    policy.WithOrigins("http://localhost:4200")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                 });
             });
 
             // Set up authentication services
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            var domain = $"https://{Configuration["Auth0:Domain"]}/";
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.Authority = "https://dev-7gr-w4iu.us.auth0.com/";
                 options.Audience = "portfolio/IssueTracker";
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
             });
+
+            services.AddAuthorization();
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("read:issues", policy => policy.Requirements.Add(new HasScopeRequirement("read:issues", "https://dev-7gr-w4iu.us.auth0.com/")));
+            //});
+
+            //services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
+            services.AddSingleton<Models.IAuth0User, Models.Auth0User>();
+            services.AddSingleton<Models.IDatabase, Models.Database>();
 
             services.AddControllers();
         }
@@ -64,12 +82,11 @@ namespace server
 
             app.UseRouting();
 
-            app.UseCors();
-
-            app.UseAuthorization();
+            app.UseCors("Development");
 
             // Enable authentication services
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
