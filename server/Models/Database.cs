@@ -76,8 +76,8 @@ namespace server.Models
                 {
                     Id = reader.GetUInt32("id"),
                     Title = reader.GetString("title"),
-                    Priority = reader.GetInt16("priority"),
-                    CreatorId = reader.GetString("creator"),
+                    Priority = reader.GetInt32("priority"),
+                    CreatorId = reader.GetUInt32("creator"),
                     Category = catName,
                     CategoryId = reader.GetUInt32("category"),
                     CategoryColor = catColor,
@@ -122,8 +122,8 @@ namespace server.Models
             {
                 Id = reader.GetUInt32("id"),
                 Title = reader.GetString("title"),
-                Priority = reader.GetInt16("priority"),
-                CreatorId = reader.GetString("creator"),
+                Priority = reader.GetInt32("priority"),
+                CreatorId = reader.GetUInt32("creator"),
                 Category = catName,
                 CategoryId = reader.GetUInt32("category"),
                 CategoryColor = catColor,
@@ -333,6 +333,58 @@ namespace server.Models
             command.Prepare();
             // Execute command
             command.ExecuteNonQuery();
+        }
+
+        // USERCONTROLLER
+
+        /// <summary>
+        /// Returns a user from database by DB id
+        /// </summary>
+        /// <param name="id">Id to retreive</param>
+        /// <returns></returns>
+        public string GetUser(uint id)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "SELECT * FROM user WHERE id=@userId";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare value
+            command.Parameters.AddWithValue("@userId", id);
+            command.Prepare();
+            // Execute command
+            using MySqlDataReader reader = command.ExecuteReader();
+
+            // Read and return data from database
+            reader.Read();      // TODO: Need some kind of error catching for invalid queries
+            return reader.GetString("authId");
+        }
+
+        /// <summary>
+        /// Returns a user from database by auth id
+        /// </summary>
+        /// <param name="authId">Id to retreive by</param>
+        /// <returns></returns>
+        public uint GetUser(string authId)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "SELECT * FROM user WHERE authId=@authId";
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare value
+            command.Parameters.AddWithValue("@authId", authId);
+            command.Prepare();
+            // Execute command
+            using MySqlDataReader reader = command.ExecuteReader();
+
+            // Read and return data from database
+            reader.Read();      // TODO: Need some kind of error catching for invalid queries
+            return reader.GetUInt32("id");
         }
     }
 }

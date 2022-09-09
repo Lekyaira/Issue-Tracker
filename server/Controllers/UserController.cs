@@ -19,10 +19,13 @@ namespace server.Controllers
     {
         // Service to get Auth0 user data
         private readonly IAuth0User _auth0User;
+        // Service to access the database
+        private readonly IDatabase _database;
 
-        public UserController(IAuth0User auth0User)
+        public UserController(IAuth0User auth0User, IDatabase database)
         {
             _auth0User = auth0User;
+            _database = database;
         }
 
         //// GET: api/values
@@ -38,7 +41,10 @@ namespace server.Controllers
         [Authorize]
         public User GetUser()
         {
-            return _auth0User.GetUserAsync(User.Identity.Name).Result;
+            var user = _auth0User.GetUserAsync(User.Identity.Name).Result;
+            uint id = _database.GetUser(User.Identity.Name);
+
+            return new User { Id = id, Name = user.name, Email = user.email };
         }
 
         //// POST api/values

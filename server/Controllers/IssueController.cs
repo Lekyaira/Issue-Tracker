@@ -63,8 +63,14 @@ namespace server.Controllers
             // Get the issue from the database
             Issue issue = _db.GetIssue(id);
 
+            // Get the user authId from database
+            string authId = _db.GetUser(issue.CreatorId);
+
             // Get the user data from Auth0 using the issue's creatorId
-            User user = _auth0User.GetUserAsync(issue.CreatorId).Result;
+            var userInfo = _auth0User.GetUserAsync(authId).Result;
+
+            // Create the user object
+            User user = new User { Id = issue.CreatorId, Name = userInfo.name, Email = userInfo.email };
 
             // Return the values
             return new IssueUser { issue = issue, user = user };

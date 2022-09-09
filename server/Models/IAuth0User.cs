@@ -5,7 +5,7 @@ namespace server.Models
 {
     public interface IAuth0User
     {
-        public Task<User> GetUserAsync(string authId);
+        public Task<(string name, string email)> GetUserAsync(string authId);
     }
 }
 

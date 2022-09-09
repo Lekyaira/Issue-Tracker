@@ -69,6 +69,22 @@ namespace server.Models
         /// </summary>
         /// <param name="id">Id of category to delete</param>
         public void DeleteCategory(uint id);
+
+        // USERCONTROLLER
+
+        /// <summary>
+        /// Returns a user from database by DB id
+        /// </summary>
+        /// <param name="id">Id to retreive</param>
+        /// <returns></returns>
+        public string GetUser(uint id);
+
+        /// <summary>
+        /// Returns a user from database by auth id
+        /// </summary>
+        /// <param name="authId">Id to retreive by</param>
+        /// <returns></returns>
+        public uint GetUser(string authId);
     }
 }
 

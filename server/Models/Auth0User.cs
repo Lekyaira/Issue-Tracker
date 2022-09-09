@@ -19,7 +19,7 @@ namespace server.Models
                  );
         }
 
-        public async Task<User> GetUserAsync(string authId)
+        public async Task<(string name, string email)> GetUserAsync(string authId)
         {
             // Create Auth0 connection client
             var client = new ManagementApiClient(
@@ -31,7 +31,7 @@ namespace server.Models
             var result = await client.Users.GetAsync(authId);
 
             // Return the new user
-            return new User() { Id = authId, Name = result.FirstName, Email = result.Email };
+            return (result.FirstName, result.Email);
         }
     }
 }

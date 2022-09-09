@@ -7,7 +7,7 @@ namespace server.Models
         public string Title { get; set; }
         public string? Description { get; set; }
         public int Priority { get; set; }
-        public string CreatorId { get; set; }
+        public uint CreatorId { get; set; }
         public string? Category { get; set; }
         public uint? CategoryId { get; set; }
         public string? CategoryColor { get; set; }
