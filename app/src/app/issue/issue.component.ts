@@ -9,7 +9,6 @@ import { Issue } from '../issue';
 import { AppUser } from '../app-user';
 import { CategoryService } from '../category.service';
 import { Category } from '../category';
-import { AuthService, User } from '@auth0/auth0-angular';
 import { UserService } from '../user.service';
 
 // declare var RichTextEditor: any;
@@ -23,7 +22,6 @@ export class IssueComponent implements OnInit {
 
   @Input() issue?: Issue;
   @Input() issueUser?: AppUser;
-  // @Input() user?: User;
   htmlContent = '';
   categories: Category[] = [];
   @ViewChild("priority") priorityValue!: ElementRef;
@@ -55,7 +53,6 @@ export class IssueComponent implements OnInit {
     private categoryService: CategoryService,
     private userService: UserService,
     private location: Location,
-    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +61,6 @@ export class IssueComponent implements OnInit {
     // If there was an id in the url, pull it from the service
     if(id){
       this.issueService.getIssue(id).subscribe(result => {
-        console.log(result);
         this.issue = result.issue;
         this.issueUser = result.user;
       });
@@ -82,8 +78,6 @@ export class IssueComponent implements OnInit {
           categoryId: 1
         }
       })
-      
-      
     }
 
     // Get all categories to populate select list

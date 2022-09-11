@@ -37,6 +37,12 @@ namespace server.Controllers
         //}
 
         // GET api/values/5
+
+        /// <summary>
+        /// Gets the logged in user and returns its details and database id, creates
+        /// a new database user if non exist.
+        /// </summary>
+        /// <returns>Logged in User</returns>
         [HttpGet]
         [Authorize]
         public User GetUser()
@@ -46,6 +52,8 @@ namespace server.Controllers
 
             return new User { Id = id, Name = user.name, Email = user.email };
         }
+
+
 
         //// POST api/values
         //[HttpPost]

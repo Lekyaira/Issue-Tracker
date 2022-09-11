@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;       // List<>
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using MySql.Data.MySqlClient;           // Database access
 
 namespace server.Models
@@ -357,9 +358,18 @@ namespace server.Models
             // Execute command
             using MySqlDataReader reader = command.ExecuteReader();
 
-            // Read and return data from database
-            reader.Read();      // TODO: Need some kind of error catching for invalid queries
-            return reader.GetString("authId");
+            // Check if values were returned
+            if (reader.HasRows)
+            {
+                // Read and return data from database
+                reader.Read();      // TODO: Need some kind of error catching for invalid queries
+                return reader.GetString("authId");
+            }
+            else // If no values were returned, tell the caller that no users were found
+            {
+                // TODO: Handle this error more nicely
+                throw new Exception("User Id not found!");
+            }
         }
 
         /// <summary>
@@ -382,9 +392,37 @@ namespace server.Models
             // Execute command
             using MySqlDataReader reader = command.ExecuteReader();
 
-            // Read and return data from database
-            reader.Read();      // TODO: Need some kind of error catching for invalid queries
-            return reader.GetUInt32("id");
+            // Check if values were returned
+            if (reader.HasRows)
+            {
+                // Read and return data from database
+                reader.Read();      // TODO: Need some kind of error catching for invalid queries
+                return reader.GetUInt32("id");
+            }
+            else // If no values were returned, we need to add the logged in user to the database
+            {
+                // Create the new user and return the new database id
+                return CreateUser(authId);
+            }
+        }
+
+        public uint CreateUser(string authId)
+        {
+            // connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "INSERT INTO user (authId) VALUES (@authId)";      // Let the database assign a new id
+            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
+            // Prepare value
+            command.Parameters.AddWithValue("@authId", authId);
+            command.Prepare();
+            // Execute command
+            command.ExecuteNonQuery();
+
+            // Return the new user's database id
+            return GetUser(authId);
         }
     }
 }
