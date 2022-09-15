@@ -28,21 +28,6 @@ namespace server.Controllers
             _database = database;
         }
 
-        //// GET: api/values
-        //[HttpGet]
-        //[Authorize]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        // GET api/values/5
-
-        /// <summary>
-        /// Gets the logged in user and returns its details and database id, creates
-        /// a new database user if non exist.
-        /// </summary>
-        /// <returns>Logged in User</returns>
         [HttpGet]
         [Authorize]
         public User GetUser()
@@ -53,25 +38,6 @@ namespace server.Controllers
             return new User { Id = id, Name = user.name, Email = user.email };
         }
 
-
-
-        //// POST api/values
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }
 
