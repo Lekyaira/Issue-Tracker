@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Issue } from '../issue';
 import { IssueService } from '../issue.service';
 
+import { CurrentProject } from '../project';
+
 @Component({
   selector: 'app-issues-view',
   templateUrl: './issues-view.component.html',
@@ -17,10 +19,11 @@ export class IssuesViewComponent implements OnInit {
   constructor(
     private issueService: IssueService,
     private router: Router,
+    private project:CurrentProject,
   ) { }
 
   ngOnInit(): void {
-    this.issueService.getIssues().subscribe(issues => this.issues = issues);
+    this.issueService.getIssues(this.project.id).subscribe(issues => this.issues = issues);
   }
 
   deleteIssue(issue: Issue): void {

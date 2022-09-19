@@ -9,8 +9,8 @@
     <span class="nav-item">
         <a routerLink="/categories">Categories</a>
     </span>
-    <span class="nav-item">
-        Project
+    <span class="nav-item" *ngIf="auth.isAuthenticated$ | async;">
+        Project: <span *ngIf="project">{{project.name}}</span>
     </span>
     <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
         <span class="nav-item" *ngIf="auth.user$ | async as user">

@@ -16,8 +16,8 @@ export class IssueService {
     private http: HttpClient,
   ) { }
 
-  getIssues(): Observable<Issue[]> {
-    return this.http.get<Issue[]>(this.issuesUrl);
+  getIssues(project: number): Observable<Issue[]> {
+    return this.http.get<Issue[]>(`${this.issuesUrl}/project/${project}`);
   }
 
   getIssue(id: number): Observable<IssueAppUser> {

@@ -10,6 +10,7 @@ import { AppUser } from '../app-user';
 import { CategoryService } from '../category.service';
 import { Category } from '../category';
 import { UserService } from '../user.service';
+import { CurrentProject } from '../project';
 
 // declare var RichTextEditor: any;
 
@@ -53,6 +54,7 @@ export class IssueComponent implements OnInit {
     private categoryService: CategoryService,
     private userService: UserService,
     private location: Location,
+    private project: CurrentProject,
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +77,8 @@ export class IssueComponent implements OnInit {
           priority: 1,
           creatorId: result.id,
           category: '',
-          categoryId: 1
+          categoryId: 1,                //TODO: Get the first category in the project and use that
+          projectId: this.project.id,
         }
       })
     }

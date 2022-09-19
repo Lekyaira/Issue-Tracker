@@ -19,6 +19,7 @@ import { CategoryDetailComponent } from './category-detail/category-detail.compo
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { environment as env } from '../environments/environment';
 import { TestComponent } from './test/test.component';
+import { CurrentProject } from './project';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { TestComponent } from './test/test.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+    CurrentProject,
   ],
   bootstrap: [AppComponent]
 })

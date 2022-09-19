@@ -7,4 +7,5 @@ export interface Issue {
     categoryId: number;
     categoryColor?: string;
     description?: string;
+    projectId: number;
 }

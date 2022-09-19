@@ -4,6 +4,7 @@ import { IssueService } from '../issue.service';
 import { Issue } from '../issue';
 import { Category } from '../category';
 import { CategoryService } from '../category.service';
+import { CurrentProject } from '../project';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private issueService: IssueService,
     private categoryService: CategoryService,
+    private project:CurrentProject,
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +34,7 @@ export class DashboardComponent implements OnInit {
       this.categories = result;
       console.log(this.categories);
       // Get issues from server
-      this.issueService.getIssues().subscribe(result => {
+      this.issueService.getIssues(this.project.id).subscribe(result => {
         this.categories.forEach(category => {
           this.issues[category.id!] = result.filter(issue => issue.categoryId == category.id!);
         });

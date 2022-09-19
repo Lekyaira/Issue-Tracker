@@ -34,6 +34,15 @@ namespace server.Controllers
             return _db.GetCategories();
         }
 
+        // Returns all categories by project id
+        // GET /api/category/project/:id
+        [HttpGet("project/{id}")]
+        [Authorize]
+        public List<Category> GetCategoriesByProject(uint id)
+        {
+            return _db.GetCategoriesByProject(id);
+        }
+
         // Returns a specified category
         // GET /api/category/:id
         [Authorize]

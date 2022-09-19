@@ -11,5 +11,6 @@ namespace server.Models
         public string? Category { get; set; }
         public uint? CategoryId { get; set; }
         public string? CategoryColor { get; set; }
+        public uint ProjectId { get; set; }
     }
 }

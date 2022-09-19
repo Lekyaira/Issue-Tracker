@@ -57,15 +57,9 @@ namespace server
 
             services.AddAuthorization();
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("read:issues", policy => policy.Requirements.Add(new HasScopeRequirement("read:issues", "https://dev-7gr-w4iu.us.auth0.com/")));
-            //});
-
-            //services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
-
             services.AddSingleton<Models.IAuth0User, Models.Auth0User>();
             services.AddSingleton<Models.IDatabase, Models.Database>();
+            services.AddSingleton<IAccess, Access>();
 
             services.AddControllers();
         }

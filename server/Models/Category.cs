@@ -6,5 +6,6 @@ namespace server.Models
         public uint Id { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }
+        public uint ProjectId { get; set; }
     }
 }
