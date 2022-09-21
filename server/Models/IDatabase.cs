@@ -107,6 +107,13 @@ namespace server.Models
         /// <returns>New database user id.</returns>
         public uint CreateUser(string authId);
 
+        /// <summary>
+        /// Get userId and authId from all users associated with a project
+        /// </summary>
+        /// <param name="projectId">Project to retreive users from</param>
+        /// <returns></returns>
+        public List<(uint userId, string authId)> UserGetUsersInProject(uint projectId);
+
         // PROJECT
 
         /// <summary>
@@ -135,6 +142,24 @@ namespace server.Models
         /// <param name="id">User id</param>
         /// <returns>List of Projects accessible by user</returns>
         public List<Project> GetProjectsByUser(uint id);
+
+        /// <summary>
+        /// Creates a new project
+        /// </summary>
+        /// <param name="project">Project to put into the database</param>
+        public void CreateProject(Project project);
+
+        /// <summary>
+        /// Updates an existing project in database
+        /// </summary>
+        /// <param name="project">Project to be updated</param>
+        public void UpdateProject(Project project);
+
+        /// <summary>
+        /// Delete a project from the database
+        /// </summary>
+        /// <param name="id">Project id to be deleted</param>
+        public void DeleteProject(uint id);
     }
 }
 

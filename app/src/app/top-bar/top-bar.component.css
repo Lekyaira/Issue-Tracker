@@ -12,8 +12,17 @@
     color: blue;
 }
 
-#new-issue {
+/*#new-issue {
     font-size: large;
     float: right;
     margin-right: 11rem;
+}*/
+
+.nav-user {
+    float:right;
+    margin-right: 3rem;
+}
+
+.dropdown {
+    margin-left: 1rem;
 }

@@ -84,7 +84,7 @@ export class IssueComponent implements OnInit {
     }
 
     // Get all categories to populate select list
-    this.categoryService.getCategories().subscribe(categories => this.categories = categories);
+    this.categoryService.getCategories(this.project.id).subscribe(categories => this.categories = categories);
   }
 
   goBack(): void {

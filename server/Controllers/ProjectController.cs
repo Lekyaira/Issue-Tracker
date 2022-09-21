@@ -76,9 +76,59 @@ namespace server.Controllers
             }
             catch (Exception ex)
             {
+                // Log the exception
+                System.Console.WriteLine($"GetProjectsByUser ERROR: {ex.Message}");
                 // Just return an empty list of projects
                 return new List<Project>();
             }
+        }
+
+        // Create a new project
+        // POST /api/project
+        [Authorize]
+        [HttpPost]
+        public void CreateProject(Project project)
+        {
+            // Set the project's owner to the currently logged in user
+            project.Owner = getLoggedInUser();
+            _db.CreateProject(project);
+        }
+
+        // Update an existing project
+        // PUT /api/project
+        [Authorize]
+        [HttpPut]
+        public void UpdateProject(Project project)
+        {
+            if (project.Id.HasValue)
+            {
+                // Make sure the user is able to udpate this project
+                uint user = getLoggedInUser();
+                Project oldProject = _db.GetProject(project.Id.Value);
+                if (oldProject.Owner == user)
+                {
+                    // Make sure no funny business is going on with the owner
+                    project.Owner = user;
+                    // We're good to update the project
+                    _db.UpdateProject(project);
+                }
+                // If not, just ignore the request
+            }
+        }
+
+        // Delete an existing project
+        // DELETE api/project/:id
+        [Authorize]
+        [HttpDelete("{id}")]
+        public void DeleteProject(uint id)
+        {
+            // Make sure the user is able to delete this project
+            Project project = _db.GetProject(id);
+            if(project.Owner == getLoggedInUser())
+            {
+                _db.DeleteProject(id);
+            }
+            // If not, just ignore the request
         }
 
         // Returns the currently logged in user by database id

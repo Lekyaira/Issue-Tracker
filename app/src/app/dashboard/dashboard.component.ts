@@ -5,6 +5,7 @@ import { Issue } from '../issue';
 import { Category } from '../category';
 import { CategoryService } from '../category.service';
 import { CurrentProject } from '../project';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,11 +27,14 @@ export class DashboardComponent implements OnInit {
     private issueService: IssueService,
     private categoryService: CategoryService,
     private project:CurrentProject,
-  ) { }
+    private router: Router,
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+   }
 
   ngOnInit(): void {
     // Get categories from server
-    this.categoryService.getCategories().subscribe(result => {
+    this.categoryService.getCategories(this.project.id).subscribe(result => {
       this.categories = result;
       console.log(this.categories);
       // Get issues from server

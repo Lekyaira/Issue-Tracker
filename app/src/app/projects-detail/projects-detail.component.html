@@ -1,0 +1,6 @@
+<span *ngIf="project">{{project.project!.name}}</span>
+<ul *ngIf="users">
+    <li *ngFor="let user of users">
+        <span>{{user.appUser.name}}</span>
+    </li>
+</ul>

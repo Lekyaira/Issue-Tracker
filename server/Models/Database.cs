@@ -510,7 +510,50 @@ namespace server.Models
             return GetUser(authId);
         }
 
-        // PROJECT
+        /// <summary>
+        /// Get userId and authId from all users associated with a project
+        /// </summary>
+        /// <param name="projectId">Project to retreive users from</param>
+        /// <returns></returns>
+        public List<(uint userId, string authId)> UserGetUsersInProject(uint projectId)
+        {
+            // Create an empty list to hold the data
+            List<(uint userId, string authId)> usersList = new();
+
+            // Get all the users associated with the project
+            List<uint> users = GetUsersInProject(projectId);
+
+            if (users.Count > 0)
+            {
+
+                // Get user authIds from database
+                // Connect to the database
+                using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+                conn.Open();
+
+                // Create query and execute
+                string QUERYSTRING = "SELECT * FROM user WHERE IN (@userId)";
+                using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
+                {
+                    // Prepare variables
+                    command.Parameters.AddWithValue("@userId", String.Join(',', users));
+                    command.Prepare();
+
+                    // Execute command
+                    using MySqlDataReader reader = command.ExecuteReader();
+
+                    // Read the data out and populate our output list
+                    while (reader.Read())
+                    {
+                        usersList.Add((reader.GetUInt32("id"), reader.GetString("authId")));
+                    }
+                }
+            }
+
+            return usersList;
+        }
+
+        // PROJECTCONTROLLER
 
         /// <summary>
         /// Returns all users associated with a particular project
@@ -610,7 +653,7 @@ namespace server.Models
                 // Get all users assoeciated with this project
                 List<uint> users = new();
                 users = GetUsersInProject(id);
-                return new Project { Id = id, Name = reader.GetString("name"), Owner = reader.GetUInt32("id"), Users = users };
+                return new Project { Id = id, Name = reader.GetString("name"), Owner = reader.GetUInt32("owner"), Users = users };
             }
             else
             {
@@ -635,36 +678,178 @@ namespace server.Models
             // Get all projects the user owns
             // Create the query and execute
             string QUERYSTRING = "SELECT * FROM project WHERE owner=@ownerId";
-            using MySqlCommand command = new MySqlCommand(QUERYSTRING, conn);
-            // Prepare variable
-            command.Parameters.AddWithValue("@ownerId", id);
-            command.Prepare();
-
-            using MySqlDataReader reader = command.ExecuteReader();
-
-            // Add all projects the user owns to the list
-            while (reader.Read())
+            using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
             {
-                projects.Add(new Project { Id = reader.GetUInt32("id"), Name = reader.GetString("name"), Owner = id, Users = GetUsersInProject(reader.GetUInt32("id")) });
+
+
+                // Prepare variable
+                command.Parameters.AddWithValue("@ownerId", id);
+                command.Prepare();
+
+                using MySqlDataReader reader = command.ExecuteReader();
+
+                // Add all projects the user owns to the list
+                while (reader.Read())
+                {
+                    projects.Add(new Project {
+                        Id = reader.GetUInt32("id"),
+                        Name = reader.GetString("name"),
+                        Owner = id,
+                        Users = GetUsersInProject(reader.GetUInt32("id"))
+                    });
+                }
+
+                // Close the reader so we can open a new one
+                reader.Close();
             }
 
             // Get the projects the user has access to
             QUERYSTRING = "SELECT * FROM project JOIN userproject ON userproject.project=project.id WHERE userproject.user=@userId";
-            using MySqlCommand usersCommand = new MySqlCommand(QUERYSTRING, conn);
-            // Prepare variable
-            usersCommand.Parameters.AddWithValue("@userId", id);
-            usersCommand.Prepare();
-
-            using MySqlDataReader userReader = usersCommand.ExecuteReader();
-
-            // Add all projects the user is associated with to the list
-            while (userReader.Read())
+            using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
             {
-                projects.Add(new Project { Id = userReader.GetUInt32("id"), Name = userReader.GetString("name"), Owner = userReader.GetUInt32("owner"), Users = GetUsersInProject(userReader.GetUInt32("id")) });
+                // Prepare variable
+                command.Parameters.AddWithValue("@userId", id);
+                command.Prepare();
+
+                using MySqlDataReader reader = command.ExecuteReader();
+
+                // Add all projects the user is associated with to the list
+                while (reader.Read())
+                {
+                    projects.Add(new Project {
+                        Id = reader.GetUInt32("id"),
+                        Name = reader.GetString("name"),
+                        Owner = reader.GetUInt32("owner"),
+                        Users = GetUsersInProject(reader.GetUInt32("id"))
+                    });
+                }
             }
 
             // Return the completed list
             return projects;
+        }
+
+        /// <summary>
+        /// Creates a new project
+        /// </summary>
+        /// <param name="project">Project to put into the database</param>
+        public void CreateProject(Project project)
+        {
+            // Connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "INSERT INTO project (name, owner) VALUES (@projectName, @projectOwner)";  // We'll let the database assign an id
+            using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
+            {
+                // Prepare variables
+                command.Parameters.AddWithValue("@projectName", project.Name);
+                command.Parameters.AddWithValue("@projectOwner", project.Owner);
+                command.Prepare();
+
+                // Execute command
+                command.ExecuteNonQuery();
+
+                // Get the generated id from the database
+                // NOTE: This is not threadsafe. If using connection pools later this will need to be changed.
+                project.Id = (uint)command.LastInsertedId;
+            }
+
+            // Insert the associated users into the database
+            QUERYSTRING = "INSERT INTO userproject (user, project) VALUES (@user, @project)";
+            using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
+            {
+                // Prepare the variables
+                command.Prepare();
+
+                // Loop through all entries and add them to the databse
+                foreach (uint user in project.Users)
+                {
+                    command.Parameters.AddWithValue("@user", user);
+                    command.Parameters.AddWithValue("@project", project.Id);
+                    // Execute the command
+                    command.ExecuteNonQuery();
+                    // Clear the parameters to prepare for the next pass
+                    command.Parameters.Clear();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing project in database
+        /// </summary>
+        /// <param name="project">Project to be updated</param>
+        public void UpdateProject(Project project)
+        {
+            // Connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "UPDATE project SET name=@projectName, owner=@projectOwner WHERE id=@projectId";
+            using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
+            {
+                // Prepare variables
+                command.Parameters.AddWithValue("@projectName", project.Name);
+                command.Parameters.AddWithValue("@projectOwner", project.Owner);
+                command.Parameters.AddWithValue("@projectId", project.Id);
+                command.Prepare();
+                // Execute the command
+                command.ExecuteNonQuery();
+            }
+
+            // Delete existing users associated with the project.
+            QUERYSTRING = "DELETE FROM userproject WHERE project=@projectId";
+            using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
+            {
+                // Prepare variables
+                command.Parameters.AddWithValue("@projectId", project.Id);
+                command.Prepare();
+                // Execute the command
+                command.ExecuteNonQuery();
+            }
+
+            // Add the users back in. This allows us to "modify" existing users, "add" new users and "delete" removed users.
+            QUERYSTRING = "INSERT INTO userproject (user, project) VALUES (@user, @project)";
+            using(MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
+            {
+                // Prepare variables
+                command.Prepare();
+
+                // Add each user
+                foreach(uint user in project.Users)
+                {
+                    command.Parameters.AddWithValue("@user", user);
+                    command.Parameters.AddWithValue("@project", project.Id);
+                    // Execute the command
+                    command.ExecuteNonQuery();
+                    // Clear the parameters to prepare for the next pass
+                    command.Parameters.Clear();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete a project from the database
+        /// </summary>
+        /// <param name="id">Project id to be deleted</param>
+        public void DeleteProject(uint id)
+        {
+            // Connect to the database
+            using MySqlConnection conn = new MySqlConnection(GetConnectionString());
+            conn.Open();
+
+            // Create the query and execute
+            string QUERYSTRING = "DELETE FROM project WHERE id=@projectId";
+            using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
+            {
+                // Prepare variables
+                command.Parameters.AddWithValue("@projectId", id);
+                command.Prepare();
+                // Exectue the command
+                command.ExecuteNonQuery();      // We don't worry about deleting associated user links because that should be handled by database cascade
+            }
         }
     }
 }

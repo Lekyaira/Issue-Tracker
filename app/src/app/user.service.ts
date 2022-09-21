@@ -18,4 +18,8 @@ export class UserService {
   getCurrentUser(): Observable<AppUser> {
     return this.http.get<AppUser>(this.issuesUrl);
   }
+
+  getUsersByProject(id: number): Observable<AppUser[]> {
+    return this.http.get<AppUser[]>(`${this.issuesUrl}/project/${id}`);
+  }
 }

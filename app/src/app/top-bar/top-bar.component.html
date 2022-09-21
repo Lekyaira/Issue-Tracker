@@ -1,31 +1,45 @@
 <h2>Issue Tracker</h2>
 <div class="navigation">
-    <span class="nav-item">
-        <a routerLink="/dashboard">Dashboard</a>
-    </span>
-    <span class="nav-item">
-        <a routerLink="/issues">Issues</a>
-    </span>
-    <span class="nav-item">
-        <a routerLink="/categories">Categories</a>
-    </span>
-    <span class="nav-item" *ngIf="auth.isAuthenticated$ | async;">
-        Project: <span *ngIf="project">{{project.name}}</span>
-    </span>
-    <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
-        <span class="nav-item" *ngIf="auth.user$ | async as user">
-            {{user.given_name}}:
+    <span class="nav" *ngIf="auth.isAuthenticated$ | async">
+        <span class="nav-item">
+            <a routerLink="/dashboard">Dashboard</a>
         </span>
         <span class="nav-item">
-            Account
+            <a routerLink="/issues">Issues</a>
         </span>
         <span class="nav-item">
-            <a (click)="auth.logout({returnTo: document.location.origin})">Log out</a>
+            <a routerLink="/categories">Categories</a>
         </span>
-    </ng-container>
-    <ng-template #loggedOut>
         <span class="nav-item">
-            <a (click)="auth.loginWithRedirect()">Log in</a>
+            <a routerLink="/projects">Projects:</a>
+            <div class="dropdown">
+                <span>{{projectName}}</span><i class="dropdown-arrow fa-solid fa-angle-down"></i>
+                <div class="dropdown-content">
+                    <div class="dropdown-item" *ngFor="let project of projects">
+                        <a (click)="updateProject(project.id!, project.name)">
+                            {{project.name}}
+                        </a>
+                    </div>
+                </div>
+            </div>
         </span>
-    </ng-template>
+    </span>
+    <span class="nav-user">
+        <ng-container *ngIf="auth.isAuthenticated$ | async; else loggedOut">
+            <span class="nav-item" *ngIf="auth.user$ | async as user">
+                {{user.given_name}}:
+            </span>
+            <span class="nav-item">
+                Account
+            </span>
+            <span class="nav-item">
+                <a (click)="auth.logout({returnTo: document.location.origin})">Log out</a>
+            </span>
+        </ng-container>
+        <ng-template #loggedOut>
+            <span class="nav-item">
+                <a (click)="auth.loginWithRedirect()">Log in</a>
+            </span>
+        </ng-template>
+    </span>
 </div>

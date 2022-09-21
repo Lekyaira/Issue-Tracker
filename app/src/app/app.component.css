@@ -13,13 +13,14 @@
 #top-bar {
     /*grid-area: nav;*/
     position: fixed;
-    overflow: hidden;
+    /*overflow: hidden;*/
     top: 0;
     left: 0;
     width: 100%;
     border-bottom: 1px solid;
     padding: 0 1rem 1rem 1rem;
     background-color: white;
+    z-index: 10;
 }
 
 /*#categories-bar {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { CategoryService } from '../category.service';
 import { Category } from '../category';
+import { CurrentProject } from '../project';
 
 @Component({
   selector: 'app-categories-view',
@@ -14,11 +15,12 @@ export class CategoriesViewComponent implements OnInit {
   editMode: boolean = false;
 
   constructor(
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private project: CurrentProject,
   ) { }
 
   ngOnInit(): void {
-    this.categoryService.getCategories().subscribe(categories => this.categories = categories);
+    this.categoryService.getCategories(this.project.id).subscribe(categories => this.categories = categories);
   }
 
   toggleEdit(): void {

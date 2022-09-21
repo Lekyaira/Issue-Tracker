@@ -1,0 +1,12 @@
+<ul class="projects">
+    <li *ngFor="let project of projects">
+        <a routerLink="detail/{{project.id}}">
+            <span class="project">{{project.name}}</span>
+        </a>
+        <span class="control-button delete-button" *ngIf="editMode"><a (click)="deleteProject(project)"><i class="fa-solid fa-xmark fa-fw"></i></a></span>
+    </li>
+    <div class="controls">
+        <a class="control-button" [routerLink]="['detail']"><i class="fa-solid fa-plus fa-fw"></i></a>
+        <a class="control-button" (click)="toggleEdit()"><i class="fa-solid fa-minus fa-fw"></i></a>
+    </div>
+</ul>

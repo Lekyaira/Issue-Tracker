@@ -20,7 +20,9 @@ export class IssuesViewComponent implements OnInit {
     private issueService: IssueService,
     private router: Router,
     private project:CurrentProject,
-  ) { }
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+   }
 
   ngOnInit(): void {
     this.issueService.getIssues(this.project.id).subscribe(issues => this.issues = issues);

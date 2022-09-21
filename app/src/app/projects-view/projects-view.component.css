@@ -1,0 +1,36 @@
+.projects {
+    list-style-type: none;
+    margin: 0;
+    margin-right: 3rem;
+    padding: 0;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+.projects li {
+    display: flex;
+    border-radius: 5px;
+    margin: 0.2rem;
+}
+
+.projects li a {
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.projects li:hover {
+    background-color: #eee;
+}
+
+.project {
+    display: inline-flex;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: lighter;
+    font-size: 1.2rem;
+}
+
+.delete-button a {
+    color: red;
+}

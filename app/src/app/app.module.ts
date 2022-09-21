@@ -20,6 +20,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { environment as env } from '../environments/environment';
 import { TestComponent } from './test/test.component';
 import { CurrentProject } from './project';
+import { ProjectsViewComponent } from './projects-view/projects-view.component';
+import { ProjectsDetailComponent } from './projects-detail/projects-detail.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { CurrentProject } from './project';
     CategoryDetailComponent,
     DashboardComponent,
     TestComponent,
+    ProjectsViewComponent,
+    ProjectsDetailComponent,
   ],
   imports: [
     BrowserModule,
