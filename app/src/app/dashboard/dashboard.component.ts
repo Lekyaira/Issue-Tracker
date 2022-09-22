@@ -36,7 +36,6 @@ export class DashboardComponent implements OnInit {
     // Get categories from server
     this.categoryService.getCategories(this.project.id).subscribe(result => {
       this.categories = result;
-      console.log(this.categories);
       // Get issues from server
       this.issueService.getIssues(this.project.id).subscribe(result => {
         this.categories.forEach(category => {

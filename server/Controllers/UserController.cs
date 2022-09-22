@@ -68,6 +68,27 @@ namespace server.Controllers
             // Return our completed list
             return users;
         }
+
+        [Authorize]
+        [HttpGet("email/{email}")]
+        public List<User> GetUserByEmail(string email)
+        {
+            // Search Auth0 for user with given email
+            var authUsers = _auth0User.GetUserByEmailAsync(email).Result;
+
+            // Loop through the results and build an output list
+            List<User> users = new();
+            foreach(var user in authUsers)
+            {
+                // Get the user id
+                uint id = _database.GetUser(user.authId);                                   // This could end up being a bottleneck, might look into ways to batch the call
+                // Build the user and add it
+                users.Add(new User { Id = id, Name = user.name, Email = email });
+            }
+
+            // Return the results
+            return users;
+        }
     }
 }
 

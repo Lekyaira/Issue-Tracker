@@ -1,11 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Component, ComponentRef, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ProjectService } from "./project.service";
+import { TopBarComponent } from "./top-bar/top-bar.component";
 
 @Injectable()
 export class CurrentProject {
     id: number = 0;
     project?: Project;
+    topBar?: TopBarComponent;
 
     constructor(
         private projectService: ProjectService,

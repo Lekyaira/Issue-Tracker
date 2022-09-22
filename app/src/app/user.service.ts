@@ -22,4 +22,8 @@ export class UserService {
   getUsersByProject(id: number): Observable<AppUser[]> {
     return this.http.get<AppUser[]>(`${this.issuesUrl}/project/${id}`);
   }
+
+  getUsersByEmail(email: string): Observable<AppUser[]> {
+    return this.http.get<AppUser[]>(`${this.issuesUrl}/email/${email}`);
+  }
 }

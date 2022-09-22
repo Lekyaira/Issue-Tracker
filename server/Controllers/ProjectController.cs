@@ -89,6 +89,7 @@ namespace server.Controllers
         [HttpPost]
         public void CreateProject(Project project)
         {
+            Console.WriteLine($"Create! : {project.Name}");
             // Set the project's owner to the currently logged in user
             project.Owner = getLoggedInUser();
             _db.CreateProject(project);

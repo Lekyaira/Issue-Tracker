@@ -532,10 +532,12 @@ namespace server.Models
                 conn.Open();
 
                 // Create query and execute
-                string QUERYSTRING = "SELECT * FROM user WHERE IN (@userId)";
+                string QUERYSTRING = "SELECT * FROM user WHERE id IN (@userId)";
                 using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
                 {
                     // Prepare variables
+                    string queryVar = string.Join(',', users);
+                    Console.WriteLine(queryVar);
                     command.Parameters.AddWithValue("@userId", String.Join(',', users));
                     command.Prepare();
 
@@ -716,12 +718,15 @@ namespace server.Models
                 // Add all projects the user is associated with to the list
                 while (reader.Read())
                 {
-                    projects.Add(new Project {
-                        Id = reader.GetUInt32("id"),
-                        Name = reader.GetString("name"),
-                        Owner = reader.GetUInt32("owner"),
-                        Users = GetUsersInProject(reader.GetUInt32("id"))
-                    });
+                    // Make sure we're not the owner, because we already have that in the list
+                    if (reader.GetUInt32("owner") != id) {
+                        projects.Add(new Project {
+                            Id = reader.GetUInt32("id"),
+                            Name = reader.GetString("name"),
+                            Owner = reader.GetUInt32("owner"),
+                            Users = GetUsersInProject(reader.GetUInt32("id"))
+                        });
+                    }
                 }
             }
 
@@ -760,14 +765,13 @@ namespace server.Models
             QUERYSTRING = "INSERT INTO userproject (user, project) VALUES (@user, @project)";
             using (MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
             {
-                // Prepare the variables
-                command.Prepare();
-
                 // Loop through all entries and add them to the databse
                 foreach (uint user in project.Users)
                 {
                     command.Parameters.AddWithValue("@user", user);
                     command.Parameters.AddWithValue("@project", project.Id);
+                    // Prepare the variables
+                    command.Prepare();
                     // Execute the command
                     command.ExecuteNonQuery();
                     // Clear the parameters to prepare for the next pass
@@ -814,14 +818,13 @@ namespace server.Models
             QUERYSTRING = "INSERT INTO userproject (user, project) VALUES (@user, @project)";
             using(MySqlCommand command = new MySqlCommand(QUERYSTRING, conn))
             {
-                // Prepare variables
-                command.Prepare();
-
                 // Add each user
                 foreach(uint user in project.Users)
                 {
                     command.Parameters.AddWithValue("@user", user);
                     command.Parameters.AddWithValue("@project", project.Id);
+                    // Prepare variables
+                    command.Prepare();
                     // Execute the command
                     command.ExecuteNonQuery();
                     // Clear the parameters to prepare for the next pass
