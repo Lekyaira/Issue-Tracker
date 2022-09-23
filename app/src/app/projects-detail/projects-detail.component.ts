@@ -17,6 +17,8 @@ export class ProjectsDetailComponent implements OnInit {
   @Input() project?: Project;
   @Input() owner?: AppUser;
   addUserEmail: string = "";
+  addUserList?: AppUser[];
+  isAddUserModalVisible: boolean = false;
 
   constructor(
     private projectService: ProjectService,
@@ -83,12 +85,27 @@ export class ProjectsDetailComponent implements OnInit {
     this.location.back();
   }
 
-  addUser(){
+  showAddUserModal(){
     this.userService.getUsersByEmail(this.addUserEmail).subscribe(result => {
-      this.users.push(result[0]);                                       // Just pulling the first one here
-                                                                        // TODO: Need to make a way to choose out of all results
+      this.addUserList = result;
     });
     this.addUserEmail = "";
+    this.isAddUserModalVisible = true;
+  }
+
+  closeModal(){
+    this.isAddUserModalVisible = false;
+    this.addUserList = [];
+  }
+
+  addUser(user: AppUser){
+    this.users.push(user);
+    this.closeModal();
+    // this.userService.getUsersByEmail(this.addUserEmail).subscribe(result => {
+    //   this.users.push(result[0]);                                       // Just pulling the first one here
+    //                                                                     // TODO: Need to make a way to choose out of all results
+    // });
+    // this.addUserEmail = "";
   }
 
   deleteUser(user: AppUser){

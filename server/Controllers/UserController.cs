@@ -73,17 +73,28 @@ namespace server.Controllers
         [HttpGet("email/{email}")]
         public List<User> GetUserByEmail(string email)
         {
-            // Search Auth0 for user with given email
-            var authUsers = _auth0User.GetUserByEmailAsync(email).Result;
-
-            // Loop through the results and build an output list
+            // Create an empty list to hold our results
             List<User> users = new();
-            foreach(var user in authUsers)
+
+            // Search Auth0 for user with given email
+            try
             {
-                // Get the user id
-                uint id = _database.GetUser(user.authId);                                   // This could end up being a bottleneck, might look into ways to batch the call
-                // Build the user and add it
-                users.Add(new User { Id = id, Name = user.name, Email = email });
+                var authUsers = _auth0User.GetUserByEmailAsync(email).Result;
+
+                // Loop through the results and build an output list
+                foreach (var user in authUsers)
+                {
+                    // Get the user id
+                    uint id = _database.GetUser(user.authId);                                   // This could end up being a bottleneck, might look into ways to batch the call
+                                                                                                // Build the user and add it
+                    users.Add(new User { Id = id, Name = user.name, Email = email });
+                }
+
+            }
+            catch (Exception e)
+            {
+                // If we get an error, just pass an empty list for now
+                Console.WriteLine($"Error trying to get users by email: {e.Message}");
             }
 
             // Return the results

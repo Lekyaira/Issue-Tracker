@@ -6,12 +6,12 @@
     <div class="project-add-user">
         <label for="add-user">Add User By Email:</label>
         <input type="text" class="text-field" id="add-user" name="add-user" [(ngModel)]="addUserEmail">
-        <a class="control-button add-user-button" (click)="addUser()"><i class="fa-solid fa-plus fa-fw"></i></a>
+        <a class="control-button add-user-button" (click)="showAddUserModal()"><i class="fa-solid fa-plus fa-fw"></i></a>
     </div>
     <div class="project-users">
         <label for="users-list">Users:</label>
         <ul class="users-list">
-            <li *ngFor="let user of users">
+            <li class="users-list-item" *ngFor="let user of users">
                 <span>{{user.name}}</span>
                 <span class="control-button delete-button"><a (click)="deleteUser(user)"><i class="fa-solid fa-minus fa-fw"></i></a></span>
             </li>
@@ -20,5 +20,19 @@
     <div class="control-buttons">
         <button type="button" class="button" (click)="goBack()">Cancel</button>
         <button type="button" class="button" (click)="save()">Save</button>
+    </div>
+    <div class="modal" [ngStyle]="{'display': isAddUserModalVisible ? 'flex' : 'none'}">
+        <div class="modal-content">
+            <div class="close-button"><a (click)="closeModal()"><i class="fa-solid fa-xmark fa-fw"></i></a></div>
+            <span class="add-users-not-found" *ngIf="addUserList!.length <= 0 || !addUserList">No results found</span>
+            <ul class="add-users-list" *ngIf="addUserList!.length > 0">
+                <li class="add-users-list-item" *ngFor="let user of addUserList">
+                    <a (click)="addUser(user)">
+                        <span class="add-user-name">{{user.name}}</span>
+                        <span class="add-user-email">{{user.email}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
