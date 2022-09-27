@@ -55,7 +55,11 @@ export class DashboardComponent implements OnInit {
     this.filteredIssues = {};
     // Filter each categoryId by priority and populate filteredIssues dictionary
     this.categories.forEach(category => {
-      this.filteredIssues[category.id!] = this.issues[category.id!].filter(issue => issue.priority <= this.filterPriority);
+      var filtered = this.issues[category.id!].filter(issue => issue.priority <= this.filterPriority);
+      // Don't show category cards if there are no issues visible
+      if(filtered.length > 0){
+        this.filteredIssues[category.id!] = filtered;
+      }
     });
   }
 

@@ -12,7 +12,7 @@
 </div>
 <div class="dashboard">
     <div *ngFor="let category of categories">
-        <div class="category-card" [ngStyle]="{'background-color': category.color}">
+        <div class="category-card" [ngStyle]="{'background-color': category.color}" *ngIf="filteredIssues[category.id!]">
             <span class="category-title">{{category.name}}</span>
             <div class="issue" *ngFor="let issue of filteredIssues[category.id!]">
                 <a routerLink="/issues/detail/{{issue.id}}">
